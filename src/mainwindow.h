@@ -23,9 +23,20 @@ public:
     QPointF pointB,pointE;
 protected:
 
+private slots:
+    void on_actionOpen_triggered();
+
+    void on_actionExit_triggered();
+
+    void on_actionPencil_triggered();
+
+    void on_actionShapes_triggered();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
+    QGraphicsView *view;
+    QGraphicsPixmapItem* item;
     Line *line;
 };
 

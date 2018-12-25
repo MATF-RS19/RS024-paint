@@ -3,5 +3,9 @@
         <file>images/eraser_transparent.png</file>
         <file>images/pencil.jpg</file>
         <file>images/shapes.png</file>
+        <file>images/exit_transparent.png</file>
+        <file>images/new_file.png</file>
+        <file>images/open_file.png</file>
+        <file>images/save_transparent.png</file>
     </qresource>
 </RCC>

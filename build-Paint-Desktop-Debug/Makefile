@@ -316,8 +316,12 @@ compiler_rcc_make_all: qrc_resources.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_resources.cpp
 qrc_resources.cpp: ../src/resources.qrc \
+		../src/images/open_file.png \
+		../src/images/exit_transparent.png \
 		../src/images/shapes.png \
 		../src/images/eraser_transparent.png \
+		../src/images/new_file.png \
+		../src/images/save_transparent.png \
 		../src/images/pencil.jpg
 	/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name resources ../src/resources.qrc -o qrc_resources.cpp
 
