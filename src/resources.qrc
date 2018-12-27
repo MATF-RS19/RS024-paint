@@ -1,11 +1,20 @@
 <RCC>
-    <qresource prefix="/res">
-        <file>images/eraser_transparent.png</file>
-        <file>images/pencil.jpg</file>
+    <qresource prefix="/rec">
         <file>images/shapes.png</file>
-        <file>images/exit_transparent.png</file>
-        <file>images/new_file.png</file>
-        <file>images/open_file.png</file>
         <file>images/save_transparent.png</file>
+        <file>images/open_file.png</file>
+        <file>images/new_file.png</file>
+        <file>images/save-as.png</file>
+        <file>images/zoom-in.png</file>
+        <file>images/zoom-out.png</file>
+        <file>images/transp_exit.png</file>
+        <file>images/undo-6.png</file>
+        <file>images/redo-6.png</file>
+        <file>images/Cursor-Select-icon.png</file>
+        <file>images/Fill.png</file>
+        <file>images/insert-shapes-512.png</file>
+        <file>images/edit-512.png</file>
+        <file>images/Pencil-icon.png</file>
+        <file>images/eraser-icon-14.png</file>
     </qresource>
 </RCC>

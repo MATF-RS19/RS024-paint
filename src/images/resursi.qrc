@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/rec">
+        <file>shapes.png</file>
+        <file>save_transparent.png</file>
+        <file>open_file.png</file>
+        <file>new_file.png</file>
+        <file>eraser_transparent.png</file>
+        <file>save-as.png</file>
+        <file>zoom-in.png</file>
+        <file>zoom-out.png</file>
+        <file>transp_exit.png</file>
+        <file>undo-6.png</file>
+        <file>redo-6.png</file>
+        <file>Cursor-Select-icon.png</file>
+        <file>Fill.png</file>
+        <file>insert-shapes-512.png</file>
+        <file>edit-512.png</file>
+        <file>Pencil-icon.png</file>
+        <file>resursi.qrc</file>
+    </qresource>
+</RCC>

@@ -1,14 +1,14 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-12-24T04:50:01
+# Project created by QtCreator 2018-12-27T16:06:55
 #
 #-------------------------------------------------
 
 QT       += core gui
-QMAKE_CXXFLAGS += -std=c++11
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Paint
+TARGET = Moj
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -25,12 +25,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp \
-    line.cpp
+        mainwindow.cpp
 
 HEADERS += \
-        mainwindow.h \
-    line.h
+        mainwindow.h
 
 FORMS += \
         mainwindow.ui
