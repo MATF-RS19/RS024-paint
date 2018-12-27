@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.5
+** Created by: Qt User Interface Compiler version 5.11.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -12,14 +12,15 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QGraphicsView>
-#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QToolBar>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -45,11 +46,16 @@ public:
     QAction *actionZoom_in;
     QAction *actionZoom_out;
     QWidget *centralWidget;
-    QGraphicsView *graphicsView;
-    QSlider *horizontalSlider;
-    QPushButton *pushButton;
+    QVBoxLayout *verticalLayout_3;
+    QHBoxLayout *horizontalLayout_2;
+    QVBoxLayout *verticalLayout;
     QLabel *label;
+    QSlider *horizontalSlider;
+    QVBoxLayout *verticalLayout_2;
     QLabel *label_2;
+    QPushButton *pushButton;
+    QSpacerItem *horizontalSpacer;
+    QGraphicsView *graphicsView;
     QToolBar *toolBar;
     QToolBar *toolBar_2;
 
@@ -151,51 +157,62 @@ public:
         centralWidget->setMouseTracking(false);
         centralWidget->setFocusPolicy(Qt::NoFocus);
         centralWidget->setAutoFillBackground(false);
-        graphicsView = new QGraphicsView(centralWidget);
-        graphicsView->setObjectName(QStringLiteral("graphicsView"));
-        graphicsView->setGeometry(QRect(0, 70, 821, 561));
-        horizontalSlider = new QSlider(centralWidget);
-        horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
-        horizontalSlider->setGeometry(QRect(0, 20, 211, 51));
-        horizontalSlider->setStyleSheet(QLatin1String("QSlider::groove:horizontal {\n"
-"border: 1px solid #999999;\n"
-"height: 18px;\n"
-"\n"
-"border-radius: 9px;\n"
-"}\n"
-"\n"
-"QSlider::handle:horizontal {\n"
-"width: 18px;\n"
-" background-image: url(:/slider-knob.png)\n"
-"}\n"
-"\n"
-"QSlider::add-page:qlineargradient {\n"
-"background: lightgrey;\n"
-"border-top-right-radius: 9px;\n"
-"border-bottom-right-radius: 9px;\n"
-"border-top-left-radius: 0px;\n"
-"border-bottom-left-radius: 0px;\n"
-"}\n"
-"\n"
-"QSlider::sub-page:qlineargradient {\n"
-"background: blue;\n"
-"border-top-right-radius: 0px;\n"
-"border-bottom-right-radius: 0px;\n"
-"border-top-left-radius: 9px;\n"
-"border-bottom-left-radius: 9px;\n"
-"}"));
-        horizontalSlider->setOrientation(Qt::Horizontal);
-        pushButton = new QPushButton(centralWidget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(220, 20, 121, 41));
-        pushButton->setStyleSheet(QLatin1String("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 0, 0, 255), stop:0.166 rgba(255, 255, 0, 255), stop:0.333 rgba(0, 255, 0, 255), stop:0.5 rgba(0, 255, 255, 255), stop:0.666 rgba(0, 0, 255, 255), stop:0.833 rgba(255, 0, 255, 255), stop:1 rgba(255, 0, 0, 255));\n"
-"font: 13pt \"Ubuntu\";"));
+        verticalLayout_3 = new QVBoxLayout(centralWidget);
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setSpacing(6);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         label = new QLabel(centralWidget);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(0, 0, 121, 31));
+
+        verticalLayout->addWidget(label);
+
+        horizontalSlider = new QSlider(centralWidget);
+        horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
+        horizontalSlider->setMinimum(1);
+        horizontalSlider->setMaximum(50);
+        horizontalSlider->setOrientation(Qt::Horizontal);
+
+        verticalLayout->addWidget(horizontalSlider);
+
+
+        horizontalLayout_2->addLayout(verticalLayout);
+
+        verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         label_2 = new QLabel(centralWidget);
         label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(220, 0, 121, 21));
+
+        verticalLayout_2->addWidget(label_2);
+
+        pushButton = new QPushButton(centralWidget);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        pushButton->setStyleSheet(QLatin1String("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 0, 0, 255), stop:0.166 rgba(255, 255, 0, 255), stop:0.333 rgba(0, 255, 0, 255), stop:0.5 rgba(0, 255, 255, 255), stop:0.666 rgba(0, 0, 255, 255), stop:0.833 rgba(255, 0, 255, 255), stop:1 rgba(255, 0, 0, 255));\n"
+"font: 13pt \"Ubuntu\";"));
+
+        verticalLayout_2->addWidget(pushButton);
+
+
+        horizontalLayout_2->addLayout(verticalLayout_2);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer);
+
+
+        verticalLayout_3->addLayout(horizontalLayout_2);
+
+        graphicsView = new QGraphicsView(centralWidget);
+        graphicsView->setObjectName(QStringLiteral("graphicsView"));
+
+        verticalLayout_3->addWidget(graphicsView);
+
         MainWindow->setCentralWidget(centralWidget);
         toolBar = new QToolBar(MainWindow);
         toolBar->setObjectName(QStringLiteral("toolBar"));
@@ -226,29 +243,29 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
-        actionNew->setText(QApplication::translate("MainWindow", "New", Q_NULLPTR));
-        actionSave->setText(QApplication::translate("MainWindow", "Save", Q_NULLPTR));
-        actionSave_As->setText(QApplication::translate("MainWindow", "Save As", Q_NULLPTR));
-        actionExit->setText(QApplication::translate("MainWindow", "Exit", Q_NULLPTR));
-        actionUndo->setText(QApplication::translate("MainWindow", "Undo", Q_NULLPTR));
-        actionRedo->setText(QApplication::translate("MainWindow", "Redo", Q_NULLPTR));
-        actionPencil->setText(QApplication::translate("MainWindow", "Pencil", Q_NULLPTR));
-        actionShape->setText(QApplication::translate("MainWindow", "Shape", Q_NULLPTR));
-        actionSelect->setText(QApplication::translate("MainWindow", "Select", Q_NULLPTR));
-        actionEraser->setText(QApplication::translate("MainWindow", "Eraser", Q_NULLPTR));
-        actionLayer_1->setText(QApplication::translate("MainWindow", "Layer 1", Q_NULLPTR));
-        actionLayer_2->setText(QApplication::translate("MainWindow", "Layer  2", Q_NULLPTR));
-        actionLayer_3->setText(QApplication::translate("MainWindow", "Layer 3", Q_NULLPTR));
-        actionLayer_4->setText(QApplication::translate("MainWindow", "Layer 4", Q_NULLPTR));
-        actionFarba->setText(QApplication::translate("MainWindow", "Fill", Q_NULLPTR));
-        actionZoom_in->setText(QApplication::translate("MainWindow", "Zoom in", Q_NULLPTR));
-        actionZoom_out->setText(QApplication::translate("MainWindow", "Zoom out", Q_NULLPTR));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", nullptr));
+        actionNew->setText(QApplication::translate("MainWindow", "New", nullptr));
+        actionSave->setText(QApplication::translate("MainWindow", "Save", nullptr));
+        actionSave_As->setText(QApplication::translate("MainWindow", "Save As", nullptr));
+        actionExit->setText(QApplication::translate("MainWindow", "Exit", nullptr));
+        actionUndo->setText(QApplication::translate("MainWindow", "Undo", nullptr));
+        actionRedo->setText(QApplication::translate("MainWindow", "Redo", nullptr));
+        actionPencil->setText(QApplication::translate("MainWindow", "Pencil", nullptr));
+        actionShape->setText(QApplication::translate("MainWindow", "Shape", nullptr));
+        actionSelect->setText(QApplication::translate("MainWindow", "Select", nullptr));
+        actionEraser->setText(QApplication::translate("MainWindow", "Eraser", nullptr));
+        actionLayer_1->setText(QApplication::translate("MainWindow", "Layer 1", nullptr));
+        actionLayer_2->setText(QApplication::translate("MainWindow", "Layer  2", nullptr));
+        actionLayer_3->setText(QApplication::translate("MainWindow", "Layer 3", nullptr));
+        actionLayer_4->setText(QApplication::translate("MainWindow", "Layer 4", nullptr));
+        actionFarba->setText(QApplication::translate("MainWindow", "Fill", nullptr));
+        actionZoom_in->setText(QApplication::translate("MainWindow", "Zoom in", nullptr));
+        actionZoom_out->setText(QApplication::translate("MainWindow", "Zoom out", nullptr));
+        label->setText(QApplication::translate("MainWindow", "Pencil Size", nullptr));
+        label_2->setText(QApplication::translate("MainWindow", "Pencil Color", nullptr));
         pushButton->setText(QString());
-        label->setText(QApplication::translate("MainWindow", "Pencil Size", Q_NULLPTR));
-        label_2->setText(QApplication::translate("MainWindow", "Pencil Color", Q_NULLPTR));
-        toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", Q_NULLPTR));
-        toolBar_2->setWindowTitle(QApplication::translate("MainWindow", "toolBar_2", Q_NULLPTR));
+        toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", nullptr));
+        toolBar_2->setWindowTitle(QApplication::translate("MainWindow", "toolBar_2", nullptr));
     } // retranslateUi
 
 };
