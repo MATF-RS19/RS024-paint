@@ -134,7 +134,6 @@ font: 13pt &quot;Ubuntu&quot;;</string>
    <addaction name="actionSelect"/>
    <addaction name="actionPencil"/>
    <addaction name="actionFarba"/>
-   <addaction name="actionShape"/>
    <addaction name="actionEraser"/>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>

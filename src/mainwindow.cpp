@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QGraphicsView>
 #include <QColorDialog>
+#include <QDir>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,6 +19,11 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle(tr("Paint"));
 
     resize(700,600);
+
+    createActions();
+    createMenus();
+    createToolButtons();
+    createToolBars();
 }
 
 MainWindow::~MainWindow()
@@ -25,6 +31,55 @@ MainWindow::~MainWindow()
     delete ui;
     delete draw;
 }
+
+void MainWindow::createActions(){
+    rectangleAction = new QAction("Rectangle", this);
+    triangleAction = new QAction("Triangle", this);
+    circleAction = new QAction("Circle", this);
+    QString imagesDirectory = QDir::currentPath() + "/../src/images";
+    rectangleAction->setIcon(QIcon(imagesDirectory + "/rectangle.png"));
+    triangleAction->setIcon(QIcon(imagesDirectory + "/triangle.png"));
+    circleAction->setIcon(QIcon(imagesDirectory + "/circle.png"));
+
+    QObject::connect(rectangleAction, SIGNAL(triggered()), this, SLOT(rectangle()));
+    QObject::connect(triangleAction, SIGNAL(triggered()), this, SLOT(triangle()));
+    QObject::connect(circleAction, SIGNAL(triggered()), this, SLOT(circle()));
+}
+
+void MainWindow::createMenus(){
+    shapeMenu = new QMenu;
+    shapeMenu->addAction(rectangleAction);
+    shapeMenu->addAction(triangleAction);
+    shapeMenu->addAction(circleAction);
+}
+
+void MainWindow::createToolButtons(){
+    shapeToolButton = new ShapeButton;
+    shapeToolButton->setMenu(shapeMenu);
+    shapeToolButton->setDefaultAction(rectangleAction);
+    QString filepath = QDir::currentPath() + "/../src/images/insert-shapes-512.png";
+    shapeToolButton->setIcon(QIcon(filepath));
+}
+
+void MainWindow::createToolBars(){
+    ui->toolBar_2->addWidget(shapeToolButton);
+
+}
+
+void MainWindow::rectangle(){
+    //TODO:
+}
+
+
+void MainWindow::triangle(){
+    //TODO:
+}
+
+
+void MainWindow::circle(){
+    //TODO:
+}
+
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {

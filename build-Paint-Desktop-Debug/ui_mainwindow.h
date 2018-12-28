@@ -231,7 +231,6 @@ public:
         toolBar_2->addAction(actionSelect);
         toolBar_2->addAction(actionPencil);
         toolBar_2->addAction(actionFarba);
-        toolBar_2->addAction(actionShape);
         toolBar_2->addAction(actionEraser);
         toolBar_2->addAction(actionUndo);
         toolBar_2->addAction(actionRedo);

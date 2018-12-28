@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui printsupport
+QMAKE_CXXFLAGS += -std=c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,11 +27,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    draw.cpp
+    draw.cpp \
+    shapebutton.cpp
 
 HEADERS += \
         mainwindow.h \
-    draw.h
+    draw.h \
+    shapebutton.h
 
 FORMS += \
         mainwindow.ui

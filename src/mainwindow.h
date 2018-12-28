@@ -4,6 +4,12 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include "draw.h"
+#include <QAction>
+#include <QMenu>
+#include <QToolBar>
+#include <QToolButton>
+#include <QDebug>
+#include "shapebutton.h"
 
 namespace Ui {
 class MainWindow;
@@ -32,6 +38,11 @@ private slots:
     void on_actionRedo_triggered();
     void on_actionNew_triggered();
 
+ public slots:
+    void rectangle();
+    void triangle();
+    void circle();
+
 protected:
     void closeEvent(QCloseEvent *event) override;
 private:
@@ -41,6 +52,19 @@ private:
     QGraphicsScene *scene;
     Draw *draw;
     QGraphicsProxyWidget *widg;
+
+    void createActions();
+    void createMenus();
+    void createToolBars();
+    void createToolButtons();
+
+    QAction* rectangleAction;
+    QAction* triangleAction;
+    QAction* circleAction;
+
+    QMenu* shapeMenu;
+    QToolBar* editToolBar;
+    ShapeButton* shapeToolButton;
 };
 
 #endif // MAINWINDOW_H
