@@ -135,6 +135,7 @@ void Draw::newSheet()
 
 void Draw::mousePressEvent(QMouseEvent *event)
 {
+
     if(undoCurrent != pixCurrent){
         pixmapList.erase(pixmapList.begin()+undoCurrent+1,pixmapList.end());
         pixCurrent = undoCurrent;
@@ -210,11 +211,18 @@ void Draw::fill(const QPoint &current)
     painter->end();
     delete painter;
     QRgb colorTarget,colorFill;
-    QColor colorBuff;
 
-    pixmapList.push_back(new QPixmap(xMax,yMax));
-    pixCurrent = pixCurrent+1;
-    pixmapList[pixCurrent]->operator =(*pixmapList[pixCurrent-1]);
+    if(pixCurrent == maxUndoStep){
+        pixmapList.push_back(new QPixmap(xMax,yMax));
+        QPixmap *tmp = pixmapList.takeFirst();
+        delete tmp;
+        pixmapList[pixCurrent]->operator =(*pixmapList[pixCurrent-1]);
+    }else{
+        pixmapList.push_back(new QPixmap(xMax,yMax));
+        pixCurrent += 1;
+        undoCurrent = pixCurrent;
+        pixmapList[pixCurrent]->operator =(*pixmapList[pixCurrent-1]);
+    }
 
 
     img = new QImage(xMax,yMax,QImage::Format_RGB32);
