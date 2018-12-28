@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
     draw = new Draw;
-    widg =  scene->addWidget(draw);
+    scene->addItem(draw);
     setWindowTitle(tr("Paint"));
 
     resize(700,600);
@@ -66,28 +66,10 @@ void MainWindow::createToolBars(){
 
 }
 
-void MainWindow::rectangle(){
-    //TODO:
-}
-
-
-void MainWindow::triangle(){
-    //TODO:
-}
-
-
-void MainWindow::circle(){
-    //TODO:
-}
-
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     scene->setSceneRect(0,0,event->size().width(),event->size().height());
-    widg->resize(event->size());
-    draw->resize(event->size());
-    draw->setWidth(event->size().width());
-    draw->setHeight(event->size().height());
 }
 
 void MainWindow::on_actionPencil_triggered()
@@ -103,6 +85,20 @@ void MainWindow::on_actionEraser_triggered()
 void MainWindow::on_actionFarba_triggered()
 {
     draw->setOption(Draw::Fill);
+}
+
+void MainWindow::rectangle(){
+    draw->setOption(Draw::Rectangle);
+}
+
+
+void MainWindow::triangle(){
+    draw->setOption(Draw::Triangle);
+}
+
+
+void MainWindow::circle(){
+    draw->setOption(Draw::Circle);
 }
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)

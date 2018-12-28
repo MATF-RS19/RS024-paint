@@ -6,12 +6,13 @@
 #include <QPoint>
 #include <QWidget>
 #include <QLabel>
+#include <QGraphicsPixmapItem>
 
-class Draw : public QWidget
+class Draw : public QGraphicsPixmapItem
 {
 public:
     Draw();
-    enum Options {None,Pen,Rectangle,Erase,Fill};
+    enum Options {None,Pen,Rectangle,Erase,Fill,Circle,Triangle};
 
     bool isModified() const { return modified; }
 
@@ -32,25 +33,24 @@ public:
 
     int getPixCurrent(){return pixCurrent;}
 
-    void resizeEvent(QResizeEvent *event) override;
     void undo();
     void redo();
     bool saveFile();
     void openFile();
     void newSheet();
 protected:
-    void mousePressEvent(QMouseEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
-    void mouseReleaseEvent(QMouseEvent *event) override;
+    void	mouseMoveEvent(QGraphicsSceneMouseEvent * event) override;
+    void	mousePressEvent(QGraphicsSceneMouseEvent * event) override;
+    void	mouseReleaseEvent(QGraphicsSceneMouseEvent * event) override;
 
 private:
     void prepareForDraw();
     void draw(const QPointF &movePoint);
     void erase(const QPointF &movePoint);
-    void fill(const QPoint &current);
+    void fill(const QPointF &current);
     void fillSurface(int x,int y,QRgb targetCol,QRgb fillCol);
-
-
+    void drawTmpRect(const QPointF &current);
+    void drawRect(const QPointF &current);
     int mPenWidth;
     int pixCurrent;
     int xMax;
@@ -61,13 +61,13 @@ private:
     bool drawing;
 
     Options mOption;
-    QVector<QPixmap*> pixmapList;
+    QList<QPixmap> pixmapList;
     QPainter *painter;
-    QLabel *label;
     QColor mPenColor;
     QPainterPath *path;
     QPainterPath *pathE;
     QImage *img;
+    QPointF startPoint;
 };
 
 #endif // DRAW_H
