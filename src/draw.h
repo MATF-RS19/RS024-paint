@@ -12,6 +12,7 @@ class Draw : public QGraphicsPixmapItem
 {
 public:
     Draw();
+    ~Draw() override;
     enum Options {None,Pen,Rectangle,Erase,Fill,Circle,Triangle};
 
     bool isModified() const { return modified; }

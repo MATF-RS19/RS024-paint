@@ -6,6 +6,7 @@
 #include <QGraphicsView>
 #include <QColorDialog>
 #include <QDir>
+#include <string>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,7 +16,12 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
     draw = new Draw;
+    zValue = 0;
+    zMaxPosition = 0;
+    currentDraw = draw;
+    layers.append(draw);
     scene->addItem(draw);
+    ui->listWidget->addItem(new QListWidgetItem(QString("Layer %1").arg(zValue), nullptr, zValue));
     setWindowTitle(tr("Paint"));
 
     resize(700,600);
@@ -29,7 +35,10 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete draw;
+
+    for(int i=0; i<layers.size(); i++){
+        delete layers[i];
+    }
 }
 
 void MainWindow::createActions(){
@@ -74,56 +83,56 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::on_actionPencil_triggered()
 {
-    draw->setOption(Draw::Pen);
+    currentDraw->setOption(Draw::Pen);
 }
 
 void MainWindow::on_actionEraser_triggered()
 {
-    draw->setOption(Draw::Erase);
+    currentDraw->setOption(Draw::Erase);
 }
 
 void MainWindow::on_actionFarba_triggered()
 {
-    draw->setOption(Draw::Fill);
+    currentDraw->setOption(Draw::Fill);
 }
 
 void MainWindow::rectangle(){
-    draw->setOption(Draw::Rectangle);
+    currentDraw->setOption(Draw::Rectangle);
 }
 
 
 void MainWindow::triangle(){
-    draw->setOption(Draw::Triangle);
+    currentDraw->setOption(Draw::Triangle);
 }
 
 
 void MainWindow::circle(){
-    draw->setOption(Draw::Circle);
+    currentDraw->setOption(Draw::Circle);
 }
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
 {
-    draw->setPenWidth(value);
+    currentDraw->setPenWidth(value);
 }
 
 void MainWindow::on_pushButton_clicked()
 {
-    QColor newColor = QColorDialog::getColor(draw->penColor());
+    QColor newColor = QColorDialog::getColor(currentDraw->penColor());
 
     if (newColor.isValid())
-        draw->setPenColor(newColor);
+        currentDraw->setPenColor(newColor);
 }
 
 
 
 void MainWindow::on_actionUndo_triggered()
 {
-    draw->undo();
+    currentDraw->undo();
 }
 
 void MainWindow::on_actionRedo_triggered()
 {
-    draw->redo();
+    currentDraw->redo();
 }
 
 
@@ -136,7 +145,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 bool MainWindow::isSaved()
 {
-    if (draw->isModified()) {
+    if (currentDraw->isModified()) {
        QMessageBox::StandardButton ret;
 
        ret = QMessageBox::warning(this, tr("Paint"),
@@ -146,7 +155,7 @@ bool MainWindow::isSaved()
                           | QMessageBox::Cancel);
 
         if (ret == QMessageBox::Save) {
-            return draw->saveFile();
+            return currentDraw->saveFile();
 
         } else if (ret == QMessageBox::Cancel) {
             return false;
@@ -157,5 +166,27 @@ bool MainWindow::isSaved()
 
 void MainWindow::on_actionNew_triggered()
 {
-    draw->newSheet();
+    currentDraw->newSheet();
+}
+
+void MainWindow::on_AddLayer_clicked()
+{
+    Draw* newDraw = new Draw;
+    zValue++;
+    zMaxPosition = zValue;
+    newDraw->setZValue(zMaxPosition);
+    layers.append(newDraw);
+    scene->addItem(newDraw);
+    ui->listWidget->addItem(new QListWidgetItem(QString("Layer %1").arg(zValue), nullptr, zValue));
+    currentDraw = newDraw;
+}
+
+void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
+{
+    int index = item->type();
+    double tmpZvalue = layers[index]->zValue();
+    layers[index]->setZValue(zValue);
+    layers[zMaxPosition]->setZValue(tmpZvalue);
+    zMaxPosition = index;
+    currentDraw = layers[index];
 }

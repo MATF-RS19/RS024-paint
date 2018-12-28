@@ -9,6 +9,7 @@
 #include <QToolBar>
 #include <QToolButton>
 #include <QDebug>
+#include <QListWidgetItem>
 #include "shapebutton.h"
 
 namespace Ui {
@@ -38,7 +39,11 @@ private slots:
     void on_actionRedo_triggered();
     void on_actionNew_triggered();
 
- public slots:
+    void on_AddLayer_clicked();
+
+    void on_listWidget_itemClicked(QListWidgetItem *item);
+
+public slots:
     void rectangle();
     void triangle();
     void circle();
@@ -51,7 +56,10 @@ private:
 
     QGraphicsScene *scene;
     Draw *draw;
+    Draw *currentDraw;
     QGraphicsProxyWidget *widg;
+    int zValue;
+    int zMaxPosition;
 
     void createActions();
     void createMenus();
@@ -65,6 +73,7 @@ private:
     QMenu* shapeMenu;
     QToolBar* editToolBar;
     ShapeButton* shapeToolButton;
+    QList<Draw*> layers;
 };
 
 #endif // MAINWINDOW_H

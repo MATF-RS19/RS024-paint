@@ -11,9 +11,14 @@ Draw::Draw()
     yMax = 700;
     pixmapList.push_back(QPixmap(xMax,yMax));
     pixCurrent = 0;
+    undoCurrent = 0;
     pixmapList[pixCurrent].fill();
     painter = new QPainter(&pixmapList[pixCurrent]);
     setPixmap(pixmapList[pixCurrent]);
+}
+
+Draw::~Draw(){
+    delete painter;
 }
 
 void Draw::setPenWidth(int newWidth)
@@ -117,7 +122,6 @@ void Draw::newSheet()
 
 void Draw::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
-    qDebug("%d %d\n",undoCurrent,pixCurrent);
     if(undoCurrent != pixCurrent) {
         pixmapList.erase(pixmapList.begin()+undoCurrent+1,pixmapList.end());
         pixCurrent = undoCurrent;
