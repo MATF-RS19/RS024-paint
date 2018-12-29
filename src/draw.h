@@ -27,7 +27,10 @@ public:
     void setOption(const Options &option);
 
     void setWidth(int width);
+    int getWidth(){return xMax;}
+
     void setHeight(int height);
+    int getHeight(){return yMax;}
 
     int getUndoCurrent() {return undoCurrent;}
     void setUndoCurrent(int newUndoCurrent);
@@ -39,6 +42,8 @@ public:
     bool saveFile();
     void openFile();
     void newSheet();
+
+    QPixmap getLastPixmap() const;
 protected:
     void	mouseMoveEvent(QGraphicsSceneMouseEvent * event) override;
     void	mousePressEvent(QGraphicsSceneMouseEvent * event) override;
@@ -67,7 +72,7 @@ private:
     QColor mPenColor;
     QPainterPath *path;
     QPainterPath *pathE;
-    QImage *img;
+    QImage img;
     QPointF startPoint;
 };
 

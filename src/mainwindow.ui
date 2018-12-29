@@ -98,6 +98,13 @@ font: 13pt &quot;Ubuntu&quot;;</string>
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>Show All</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="AddLayer">
         <property name="text">
          <string>Add Layer</string>

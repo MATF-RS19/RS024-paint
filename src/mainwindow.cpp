@@ -7,7 +7,10 @@
 #include <QColorDialog>
 #include <QDir>
 #include <string>
-
+#include <QColor>
+#include <QPainter>
+#include <iostream>
+#include <thread>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -23,9 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->addItem(draw);
     ui->listWidget->addItem(new QListWidgetItem(QString("Layer %1").arg(zValue), nullptr, zValue));
     setWindowTitle(tr("Paint"));
-
     resize(700,600);
-
+    allTogether = nullptr;
     createActions();
     createMenus();
     createToolButtons();
@@ -39,6 +41,8 @@ MainWindow::~MainWindow()
     for(int i=0; i<layers.size(); i++){
         delete layers[i];
     }
+    delete allTogether;
+    delete draw;
 }
 
 void MainWindow::createActions(){
@@ -170,7 +174,12 @@ void MainWindow::on_actionNew_triggered()
 }
 
 void MainWindow::on_AddLayer_clicked()
-{
+{   if(allTogether != nullptr){
+        zValue--;
+        scene->removeItem(allTogether);
+        delete allTogether;
+        allTogether = nullptr;
+    }
     Draw* newDraw = new Draw;
     zValue++;
     zMaxPosition = zValue;
@@ -183,10 +192,62 @@ void MainWindow::on_AddLayer_clicked()
 
 void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
 {
+    if(allTogether != nullptr){
+        zValue--;
+        scene->removeItem(allTogether);
+        delete allTogether;
+        allTogether = nullptr;
+    }
     int index = item->type();
     double tmpZvalue = layers[index]->zValue();
     layers[index]->setZValue(zValue);
     layers[zMaxPosition]->setZValue(tmpZvalue);
     zMaxPosition = index;
     currentDraw = layers[index];
+}
+
+void MainWindow::mergePixmaps(QImage &img,QList<QImage> &layersImages,const int thrNum,const int xMax,const int yMax,const int numThreads){
+    int layersImagesSize = layers.size()-1;
+    int numRows = xMax / numThreads;
+    int rest = xMax % numThreads;
+    int start, end;
+    if (thrNum == 0) {
+        start = numRows * thrNum;
+        end = (numRows * (thrNum + 1)) + rest;
+     }else {
+        start = numRows * thrNum + rest;
+        end = (numRows * (thrNum + 1)) + rest;
+     }
+    for (int i = start; i < end; ++i)
+        for(int j = 0; j < yMax; ++j)
+            if(img.pixelColor(i,j) == Qt::white)
+                for(int k = 0;k<layersImagesSize;k++)
+                    if(layersImages[k].pixelColor(i,j) != Qt::white){
+                        img.setPixelColor(i,j,layersImages[k].pixelColor(i,j));
+                        break;
+                    }
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    if(allTogether != nullptr)
+        delete allTogether;
+    allTogether = new Draw;
+    int numThreads = 10;
+    QImage img = layers.last()->getLastPixmap().toImage();
+    QList<QImage> layersImages;
+    QList<QPixmap> layersPixmap;
+    for(int i = 0;i<layers.size()-1;i++)
+        layersImages.append(layers[i]->getLastPixmap().toImage());
+    std::thread threads[numThreads];
+    for (int i = 0; i < numThreads; ++i) {
+      threads[i] = std::thread(&MainWindow::mergePixmaps,this, std::ref(img), std::ref(layersImages),
+                               i,allTogether->getWidth(),allTogether->getHeight(),numThreads);
+    }
+    for (int i = 0; i < numThreads; ++i) {
+       threads[i].join();
+     }
+    allTogether->setPixmap(QPixmap::fromImage(img));
+    scene->addItem(allTogether);
+    allTogether->setZValue(++zValue);
 }

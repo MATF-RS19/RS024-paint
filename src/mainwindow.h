@@ -25,6 +25,7 @@ public:
     ~MainWindow() override;
 
     void resizeEvent(QResizeEvent *event) override;
+
 private slots:
     void on_actionPencil_triggered();
     void on_actionEraser_triggered();
@@ -43,6 +44,7 @@ private slots:
 
     void on_listWidget_itemClicked(QListWidgetItem *item);
 
+    void on_pushButton_2_clicked();
 public slots:
     void rectangle();
     void triangle();
@@ -53,10 +55,10 @@ protected:
 private:
     Ui::MainWindow *ui;
     bool isSaved();
-
     QGraphicsScene *scene;
     Draw *draw;
     Draw *currentDraw;
+    Draw *allTogether;
     QGraphicsProxyWidget *widg;
     int zValue;
     int zMaxPosition;
@@ -65,6 +67,8 @@ private:
     void createMenus();
     void createToolBars();
     void createToolButtons();
+    void mergePixmaps(QImage &img, QList<QImage> &layersImages,
+                      const int thread_number, const int xMax, const int yMax, const int numThreads);
 
     QAction* rectangleAction;
     QAction* triangleAction;

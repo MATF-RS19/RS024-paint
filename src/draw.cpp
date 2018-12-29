@@ -120,6 +120,11 @@ void Draw::newSheet()
     painter = new QPainter(&pixmapList[pixCurrent]);
 }
 
+QPixmap Draw::getLastPixmap() const
+{
+    return pixmapList[pixCurrent];
+}
+
 void Draw::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
     if(undoCurrent != pixCurrent) {
@@ -222,16 +227,15 @@ void Draw::fill(const QPointF &current)
     }
 
 
-    img = new QImage(xMax,yMax,QImage::Format_RGB32);
-    *img = pixmapList[pixCurrent].toImage();
-    colorTarget = img->pixel(current.x(),current.y());
+    img = QImage(xMax,yMax,QImage::Format_RGB32);
+    img = pixmapList[pixCurrent].toImage();
+    colorTarget = img.pixel(current.x(),current.y());
     colorFill = mPenColor.rgb();
     fillSurface(current.x(),current.y(),colorTarget,colorFill);
 
-    pixmapList[pixCurrent].convertFromImage(*img);
+    pixmapList[pixCurrent].convertFromImage(img);
     painter = new QPainter(&pixmapList[pixCurrent]);
 
-    delete img;
 
     setPixmap(pixmapList[pixCurrent]);
 }
@@ -241,7 +245,7 @@ void Draw::fillSurface(int x, int y, QRgb targetCol, QRgb fillCol)
     int a,b,i;
     QVector<QPoint> positionsList;
 
-    if(img->pixel(x,y) != targetCol) return;
+    if(img.pixel(x,y) != targetCol) return;
     if(x<0 || y<0 || x > (xMax-1) || y > (yMax-1) || targetCol==fillCol) return;
 
     positionsList.push_back(QPoint(x,y));
@@ -255,32 +259,32 @@ void Draw::fillSurface(int x, int y, QRgb targetCol, QRgb fillCol)
         {
             for(i=0; i<xMax; i++)
             {
-                img->setPixel(i,0,fillCol);
-                img->setPixel(i,yMax-1,fillCol);
+                img.setPixel(i,0,fillCol);
+                img.setPixel(i,yMax-1,fillCol);
             }
             for(i=0; i<yMax; i++)
             {
-                img->setPixel(0,i,fillCol);
-                img->setPixel(xMax-1,i,fillCol);
+                img.setPixel(0,i,fillCol);
+                img.setPixel(xMax-1,i,fillCol);
             }
         }
 
-        img->setPixel(a,b,fillCol);
+        img.setPixel(a,b,fillCol);
         positionsList.remove(positionsList.size()-1);
-        if(img->pixel(a,b-1)==targetCol)
+        if(img.pixel(a,b-1)==targetCol)
         {
             positionsList.push_back(QPoint(a,b-1));
         }
 
-        if(img->pixel(a,b+1)==targetCol)
+        if(img.pixel(a,b+1)==targetCol)
         {
             positionsList.push_back(QPoint(a,b+1));
         }
-        if(img->pixel(a+1,b)==targetCol)
+        if(img.pixel(a+1,b)==targetCol)
         {
             positionsList.push_back(QPoint(a+1,b));
         }
-        if(img->pixel(a-1,b)==targetCol)
+        if(img.pixel(a-1,b)==targetCol)
         {
             positionsList.push_back(QPoint(a-1,b));
         }
