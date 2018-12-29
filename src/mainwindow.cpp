@@ -42,7 +42,6 @@ MainWindow::~MainWindow()
         delete layers[i];
     }
     delete allTogether;
-    delete draw;
 }
 
 void MainWindow::createActions(){
