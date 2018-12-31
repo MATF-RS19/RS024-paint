@@ -45,6 +45,12 @@ private slots:
     void on_listWidget_itemClicked(QListWidgetItem *item);
 
     void on_pushButton_2_clicked();
+    void on_actionSave_As_triggered();
+
+    void on_actionOpen_triggered();
+
+    void on_actionSave_triggered();
+
 public slots:
     void rectangle();
     void triangle();

@@ -7,7 +7,6 @@
         <file>images/save-as.png</file>
         <file>images/zoom-in.png</file>
         <file>images/zoom-out.png</file>
-        <file>images/transp_exit.png</file>
         <file>images/undo-6.png</file>
         <file>images/redo-6.png</file>
         <file>images/Cursor-Select-icon.png</file>
@@ -16,5 +15,6 @@
         <file>images/edit-512.png</file>
         <file>images/Pencil-icon.png</file>
         <file>images/eraser-icon-14.png</file>
+        <file>images/Open-Folder-512.png</file>
     </qresource>
 </RCC>

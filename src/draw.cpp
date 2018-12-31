@@ -15,6 +15,7 @@ Draw::Draw()
     pixmapList[pixCurrent].fill();
     painter = new QPainter(&pixmapList[pixCurrent]);
     setPixmap(pixmapList[pixCurrent]);
+    saved = false;
 }
 
 Draw::~Draw(){
@@ -70,8 +71,6 @@ void Draw::prepareForDraw()
 
 }
 
-
-
 void Draw::undo()
 {
     if(undoCurrent == 0) return;
@@ -92,19 +91,29 @@ void Draw::redo()
 
 bool Draw::saveFile()
 {
-    QString file = QFileDialog::getSaveFileName(nullptr, "Save image", QString(), "Images (*.png *.gif *.jpg *.jpeg)");
+    saved = true;
+    this->file = QFileDialog::getSaveFileName(nullptr, "Save image", QString(), "Images (*.png *.gif *.jpg *.jpeg)");
     modified = false;
     return pixmapList[pixCurrent].save(file);
 }
 
+bool Draw::saveSameFile()
+{
+    if(!saved){
+        return saveFile();
+    }
+    modified = false;
+    return pixmapList[pixCurrent].save(this->file);
+}
+
 void Draw::openFile() {
-    QString file = QFileDialog::getOpenFileName(nullptr,"Open image",QString(),"Images (*.png *.gif *.jpg *.jpeg)");
+    this->file = QFileDialog::getOpenFileName(nullptr,"Open image",QString(),"Images (*.png *.gif *.jpg *.jpeg)");
     delete painter;
     pixmapList.removeLast();
     pixmapList.push_back(QPixmap(file));
     painter = new QPainter(&pixmapList[pixCurrent]);
     setPixmap(pixmapList[pixCurrent]);
-    modified = true;
+    //modified = true;
 }
 
 void Draw::newSheet()
@@ -136,18 +145,16 @@ void Draw::mousePressEvent(QGraphicsSceneMouseEvent * event)
             prepareForDraw();
             path = new QPainterPath(QPointF(event->pos().x(),event->pos().y()));
             path->moveTo(event->pos().x(),event->pos().y());
-        } else if(mOption == Rectangle) {
-            startPoint = event->pos();
-        } else if(mOption == Circle) {
-            startPoint = event->pos();
-        } else if(mOption == Triangle) {
-            startPoint = event->pos();
-        } else if(mOption == Erase) {
+        }
+         else if(mOption == Erase) {
             prepareForDraw();
             pathE = new QPainterPath(QPointF(event->pos().x(),event->pos().y()));
             pathE->moveTo(event->pos().x(),event->pos().y());
         } else if(mOption == Fill) {
             fill(event->pos());
+        }
+        else { // Rect, Circle, Triangle
+            startPoint = event->pos();
         }
         drawing = true;
     }
@@ -159,11 +166,11 @@ void Draw::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
         if(mOption == Pen) {
             draw(event->pos());
         } else if(mOption == Rectangle) {
-            drawTmpRect(event->pos());
+            drawTmp(event->pos(), 1);
         } else if(mOption == Circle) {
-            //drawTmpCircle(event->pos());
+            drawTmp(event->pos(), 2);
         } else if(mOption == Triangle) {
-            //drawTmpTriangle(event->pos());
+            //drawTmp(event->pos(), 3);
         } else if(mOption == Erase) {
             erase(event->pos());
         }
@@ -178,7 +185,7 @@ void Draw::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
         } else if(mOption == Rectangle) {
             drawRect(event->pos());
         } else if(mOption == Circle) {
-            //drawCircle(event->pos());
+            drawCircle(event->pos());
         } else if(mOption == Triangle) {
             //drawTriangle(event->pos());
         } else if(mOption == Erase) {
@@ -195,7 +202,7 @@ void Draw::draw(const QPointF &movePoint)
     painter->drawPath(*path);
     painter->setRenderHint(QPainter::Antialiasing);
     setPixmap(pixmapList[pixCurrent]);
-    modified=true;
+    modified = true;
 }
 
 void Draw::erase(const QPointF &movePoint)
@@ -206,7 +213,7 @@ void Draw::erase(const QPointF &movePoint)
     painter->drawPath(*pathE);
     painter->setRenderHint(QPainter::Antialiasing);
     setPixmap(pixmapList[pixCurrent]);
-    modified=true;
+    modified = true;
 }
 
 void Draw::fill(const QPointF &current)
@@ -238,6 +245,7 @@ void Draw::fill(const QPointF &current)
 
 
     setPixmap(pixmapList[pixCurrent]);
+    modified = true;
 }
 
 void Draw::fillSurface(int x, int y, QRgb targetCol, QRgb fillCol)
@@ -289,18 +297,26 @@ void Draw::fillSurface(int x, int y, QRgb targetCol, QRgb fillCol)
             positionsList.push_back(QPoint(a-1,b));
         }
     }
+    modified = true;
 }
 
-void Draw::drawTmpRect(const QPointF &current)
-{
+
+void Draw::drawTmp(const QPointF &current, int shapeNumber){
     prepareForDraw();
     painter->setPen(QPen(mPenColor, mPenWidth));
-    painter->drawRect(QRectF(startPoint,current));
+    if(shapeNumber == 1){
+        painter->drawRect(QRectF(startPoint,current));
+    }
+    else if(shapeNumber == 2){
+        painter->drawEllipse(QRectF(startPoint,current));
+    }
+    //else{} - TODO: Triangle
     setPixmap(pixmapList[pixCurrent]);
     delete painter;
     pixmapList.removeLast();
     pixCurrent = pixmapList.size()-1;
     painter = new QPainter(&pixmapList[pixCurrent]);
+    modified = true;
 }
 
 void Draw::drawRect(const QPointF &current){
@@ -309,3 +325,14 @@ void Draw::drawRect(const QPointF &current){
     painter->drawRect(QRectF(startPoint,current));
     setPixmap(pixmapList[pixCurrent]);
 }
+
+void Draw::drawCircle(const QPointF &current)
+{
+    prepareForDraw();
+    painter->setPen(QPen(mPenColor, mPenWidth));
+    painter->drawEllipse(QRectF(startPoint,current));
+    setPixmap(pixmapList[pixCurrent]);
+}
+
+
+

@@ -146,9 +146,9 @@ font: 13pt &quot;Ubuntu&quot;;</string>
     <bool>false</bool>
    </attribute>
    <addaction name="actionNew"/>
+   <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
    <addaction name="actionSave_As"/>
-   <addaction name="actionExit"/>
    <addaction name="actionZoom_in"/>
    <addaction name="actionZoom_out"/>
   </widget>
@@ -195,15 +195,6 @@ font: 13pt &quot;Ubuntu&quot;;</string>
    </property>
    <property name="text">
     <string>Save As</string>
-   </property>
-  </action>
-  <action name="actionExit">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/rec/images/transp_exit.png</normaloff>:/rec/images/transp_exit.png</iconset>
-   </property>
-   <property name="text">
-    <string>Exit</string>
    </property>
   </action>
   <action name="actionUndo">
@@ -331,6 +322,15 @@ font: 13pt &quot;Ubuntu&quot;;</string>
    </property>
    <property name="text">
     <string>Zoom out</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/rec/images/open_file.png</normaloff>:/rec/images/open_file.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
    </property>
   </action>
  </widget>

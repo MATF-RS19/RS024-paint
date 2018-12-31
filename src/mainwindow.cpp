@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle(tr("Paint"));
     resize(700,600);
     allTogether = nullptr;
+
     createActions();
     createMenus();
     createToolButtons();
@@ -249,4 +250,25 @@ void MainWindow::on_pushButton_2_clicked()
     allTogether->setPixmap(QPixmap::fromImage(img));
     scene->addItem(allTogether);
     allTogether->setZValue(++zValue);
+}
+
+
+void MainWindow::on_actionSave_As_triggered()
+{
+    if (currentDraw->isModified()) {
+       currentDraw->saveFile();
+    }
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    currentDraw->openFile();
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+    if (currentDraw->isModified()) {
+        currentDraw->setModified(false);
+        currentDraw->saveSameFile();
+    }
 }
