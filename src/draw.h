@@ -13,7 +13,7 @@ class Draw : public QGraphicsPixmapItem
 public:
     Draw();
     ~Draw() override;
-    enum Options {None,Pen,Rectangle,Erase,Fill,Circle,Triangle};
+    enum Options {None,Pen,Rectangle,Erase,Fill,Circle,Triangle, Elipse};
 
     void setModified(bool value) { modified = value; }
     bool isModified() const { return modified; }
@@ -62,11 +62,15 @@ private:
     void erase(const QPointF &movePoint);
     void fill(const QPointF &current);
     void fillSurface(int x,int y,QRgb targetCol,QRgb fillCol);
-    void drawTmp(const QPointF &current, int shapeNumber);
+    void drawTmp(const QPointF &current, Options shape);
     void drawTmpRect(const QPointF &current);
     void drawTmpCircle(const QPointF &current);
+    void drawTmpElipse(const QPointF &current);
+    void drawTmpTriangle(const QPointF &current);
     void drawRect(const QPointF &current);
     void drawCircle(const QPointF &current);
+    void drawElipse(const QPointF &current);
+    void drawTriangle(const QPointF &current);
     int mPenWidth;
     int pixCurrent;
     int xMax;

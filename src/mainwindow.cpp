@@ -49,14 +49,17 @@ void MainWindow::createActions(){
     rectangleAction = new QAction("Rectangle", this);
     triangleAction = new QAction("Triangle", this);
     circleAction = new QAction("Circle", this);
+    elipseAction = new QAction("Elipse", this);
     QString imagesDirectory = QDir::currentPath() + "/../src/images";
     rectangleAction->setIcon(QIcon(imagesDirectory + "/rectangle.png"));
     triangleAction->setIcon(QIcon(imagesDirectory + "/triangle.png"));
     circleAction->setIcon(QIcon(imagesDirectory + "/circle.png"));
+    elipseAction->setIcon(QIcon(imagesDirectory + "/elipse.png"));
 
     QObject::connect(rectangleAction, SIGNAL(triggered()), this, SLOT(rectangle()));
     QObject::connect(triangleAction, SIGNAL(triggered()), this, SLOT(triangle()));
     QObject::connect(circleAction, SIGNAL(triggered()), this, SLOT(circle()));
+    QObject::connect(elipseAction, SIGNAL(triggered()), this, SLOT(elipse()));
 }
 
 void MainWindow::createMenus(){
@@ -64,6 +67,7 @@ void MainWindow::createMenus(){
     shapeMenu->addAction(rectangleAction);
     shapeMenu->addAction(triangleAction);
     shapeMenu->addAction(circleAction);
+    shapeMenu->addAction(elipseAction);
 }
 
 void MainWindow::createToolButtons(){
@@ -112,6 +116,10 @@ void MainWindow::triangle(){
 
 void MainWindow::circle(){
     currentDraw->setOption(Draw::Circle);
+}
+
+void MainWindow::elipse(){
+    currentDraw->setOption(Draw::Elipse);
 }
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
@@ -271,4 +279,9 @@ void MainWindow::on_actionSave_triggered()
         currentDraw->setModified(false);
         currentDraw->saveSameFile();
     }
+}
+
+void MainWindow::on_actionRotate_triggered()
+{
+    ui->graphicsView->rotate(-90);
 }

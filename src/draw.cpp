@@ -92,7 +92,7 @@ void Draw::redo()
 bool Draw::saveFile()
 {
     saved = true;
-    this->file = QFileDialog::getSaveFileName(nullptr, "Save image", QString(), "Images (*.png *.gif *.jpg *.jpeg)");
+    file = QFileDialog::getSaveFileName(nullptr, "Save image", QString(), "Images (*.png *.gif *.jpg *.jpeg)");
     modified = false;
     return pixmapList[pixCurrent].save(file);
 }
@@ -103,11 +103,11 @@ bool Draw::saveSameFile()
         return saveFile();
     }
     modified = false;
-    return pixmapList[pixCurrent].save(this->file);
+    return pixmapList[pixCurrent].save(file);
 }
 
 void Draw::openFile() {
-    this->file = QFileDialog::getOpenFileName(nullptr,"Open image",QString(),"Images (*.png *.gif *.jpg *.jpeg)");
+    file = QFileDialog::getOpenFileName(nullptr,"Open image",QString(),"Images (*.png *.gif *.jpg *.jpeg)");
     delete painter;
     pixmapList.removeLast();
     pixmapList.push_back(QPixmap(file));
@@ -166,13 +166,16 @@ void Draw::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
         if(mOption == Pen) {
             draw(event->pos());
         } else if(mOption == Rectangle) {
-            drawTmp(event->pos(), 1);
-        } else if(mOption == Circle) {
-            drawTmp(event->pos(), 2);
+            drawTmp(event->pos(), Rectangle);
+        } else if(mOption == Elipse) {
+            drawTmp(event->pos(), Elipse);
         } else if(mOption == Triangle) {
-            //drawTmp(event->pos(), 3);
+            drawTmp(event->pos(), Triangle);
         } else if(mOption == Erase) {
             erase(event->pos());
+        }
+        else if(mOption == Circle){
+            drawTmp(event->pos(), Circle);
         }
     }
 }
@@ -187,9 +190,12 @@ void Draw::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
         } else if(mOption == Circle) {
             drawCircle(event->pos());
         } else if(mOption == Triangle) {
-            //drawTriangle(event->pos());
+            drawTriangle(event->pos());
         } else if(mOption == Erase) {
             delete pathE;
+        }
+        else if(mOption == Elipse){
+            drawElipse(event->pos());
         }
         drawing = false;
     }
@@ -301,16 +307,28 @@ void Draw::fillSurface(int x, int y, QRgb targetCol, QRgb fillCol)
 }
 
 
-void Draw::drawTmp(const QPointF &current, int shapeNumber){
+void Draw::drawTmp(const QPointF &current, Options shape){
     prepareForDraw();
     painter->setPen(QPen(mPenColor, mPenWidth));
-    if(shapeNumber == 1){
+    if(shape == Rectangle){
         painter->drawRect(QRectF(startPoint,current));
     }
-    else if(shapeNumber == 2){
+    else if(shape == Elipse){
         painter->drawEllipse(QRectF(startPoint,current));
     }
-    //else{} - TODO: Triangle
+    else if(shape == Triangle){
+        QPointF firstPoint(startPoint.x(), current.y());
+        qreal Cx = (startPoint.x()+current.x())/2;
+        qreal Cy = startPoint.y();
+        QPointF thirdPoint(Cx, Cy);
+        QPointF points[3] = {firstPoint, current, thirdPoint};
+        painter->drawConvexPolygon(points, 3);
+    }
+    else if(shape == Circle){
+        QPointF center((startPoint.x()+current.x())/2, (startPoint.y()+current.y())/2);
+        qreal radius = (current.x()-startPoint.x())/2;
+        painter->drawEllipse(center, radius, radius);
+    }
     setPixmap(pixmapList[pixCurrent]);
     delete painter;
     pixmapList.removeLast();
@@ -330,7 +348,29 @@ void Draw::drawCircle(const QPointF &current)
 {
     prepareForDraw();
     painter->setPen(QPen(mPenColor, mPenWidth));
+    QPointF center((startPoint.x()+current.x())/2, (startPoint.y()+current.y())/2);
+    qreal radius = (current.x()-startPoint.x())/2;
+    painter->drawEllipse(center, radius, radius);
+    setPixmap(pixmapList[pixCurrent]);
+}
+
+void Draw::drawElipse(const QPointF &current){
+    prepareForDraw();
+    painter->setPen(QPen(mPenColor, mPenWidth));
     painter->drawEllipse(QRectF(startPoint,current));
+    setPixmap(pixmapList[pixCurrent]);
+}
+
+void Draw::drawTriangle(const QPointF &current)
+{
+    prepareForDraw();
+    QPointF firstPoint(startPoint.x(), current.y());
+    qreal Cx = (startPoint.x()+current.x())/2;
+    qreal Cy = startPoint.y();
+    QPointF thirdPoint(Cx, Cy);
+    QPointF points[3] = {firstPoint, current, thirdPoint};
+    painter->setPen(QPen(mPenColor, mPenWidth));
+    painter->drawConvexPolygon(points, 3);
     setPixmap(pixmapList[pixCurrent]);
 }
 

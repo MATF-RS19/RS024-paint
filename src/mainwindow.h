@@ -51,10 +51,13 @@ private slots:
 
     void on_actionSave_triggered();
 
+    void on_actionRotate_triggered();
+
 public slots:
     void rectangle();
     void triangle();
     void circle();
+    void elipse();
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -79,6 +82,7 @@ private:
     QAction* rectangleAction;
     QAction* triangleAction;
     QAction* circleAction;
+    QAction* elipseAction;
 
     QMenu* shapeMenu;
     QToolBar* editToolBar;
