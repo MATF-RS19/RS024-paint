@@ -9,16 +9,23 @@
 #include <string>
 #include <QColor>
 #include <QPainter>
+#include <QInputDialog>
+#include <QFormLayout>
+#include <QDialogButtonBox>
 #include <iostream>
+#include <vector>
 #include <thread>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
+    inputWidthHeight();
     ui->setupUi(this);
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
-    draw = new Draw;
+    draw = new Draw(height,width);
     zValue = 0;
     zMaxPosition = 0;
     currentDraw = draw;
@@ -26,7 +33,9 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->addItem(draw);
     ui->listWidget->addItem(new QListWidgetItem(QString("Layer %1").arg(zValue), nullptr, zValue));
     setWindowTitle(tr("Paint"));
-    resize(700,600);
+    resize(height >= 600 ? 600 : height,
+           width  >= 700 ? 700 : width);
+
     allTogether = nullptr;
 
     createActions();
@@ -49,17 +58,17 @@ void MainWindow::createActions(){
     rectangleAction = new QAction("Rectangle", this);
     triangleAction = new QAction("Triangle", this);
     circleAction = new QAction("Circle", this);
-    elipseAction = new QAction("Elipse", this);
+    ellipseAction = new QAction("Ellipse", this);
     QString imagesDirectory = QDir::currentPath() + "/../src/images";
     rectangleAction->setIcon(QIcon(imagesDirectory + "/rectangle.png"));
     triangleAction->setIcon(QIcon(imagesDirectory + "/triangle.png"));
     circleAction->setIcon(QIcon(imagesDirectory + "/circle.png"));
-    elipseAction->setIcon(QIcon(imagesDirectory + "/elipse.png"));
+    ellipseAction->setIcon(QIcon(imagesDirectory + "/ellipse.png"));
 
     QObject::connect(rectangleAction, SIGNAL(triggered()), this, SLOT(rectangle()));
     QObject::connect(triangleAction, SIGNAL(triggered()), this, SLOT(triangle()));
     QObject::connect(circleAction, SIGNAL(triggered()), this, SLOT(circle()));
-    QObject::connect(elipseAction, SIGNAL(triggered()), this, SLOT(elipse()));
+    QObject::connect(ellipseAction, SIGNAL(triggered()), this, SLOT(ellipse()));
 }
 
 void MainWindow::createMenus(){
@@ -67,7 +76,7 @@ void MainWindow::createMenus(){
     shapeMenu->addAction(rectangleAction);
     shapeMenu->addAction(triangleAction);
     shapeMenu->addAction(circleAction);
-    shapeMenu->addAction(elipseAction);
+    shapeMenu->addAction(ellipseAction);
 }
 
 void MainWindow::createToolButtons(){
@@ -80,7 +89,6 @@ void MainWindow::createToolButtons(){
 
 void MainWindow::createToolBars(){
     ui->toolBar_2->addWidget(shapeToolButton);
-
 }
 
 
@@ -118,8 +126,8 @@ void MainWindow::circle(){
     currentDraw->setOption(Draw::Circle);
 }
 
-void MainWindow::elipse(){
-    currentDraw->setOption(Draw::Elipse);
+void MainWindow::ellipse(){
+    currentDraw->setOption(Draw::Ellipse);
 }
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
@@ -188,7 +196,7 @@ void MainWindow::on_AddLayer_clicked()
         delete allTogether;
         allTogether = nullptr;
     }
-    Draw* newDraw = new Draw;
+    Draw* newDraw = new Draw(height,width);
     zValue++;
     zMaxPosition = zValue;
     newDraw->setZValue(zMaxPosition);
@@ -214,8 +222,8 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
     currentDraw = layers[index];
 }
 
-void MainWindow::mergePixmaps(QImage &img,QList<QImage> &layersImages,const int thrNum,const int xMax,const int yMax,const int numThreads){
-    int layersImagesSize = layers.size()-1;
+void MainWindow::mergePixmaps(QImage &img,QList<QImage> &layersImages,
+                              const int thrNum,const int xMax,const int yMax,const int numThreads,int layersImagesSize){
     int numRows = xMax / numThreads;
     int rest = xMax % numThreads;
     int start, end;
@@ -236,23 +244,51 @@ void MainWindow::mergePixmaps(QImage &img,QList<QImage> &layersImages,const int 
                     }
 }
 
+void MainWindow::inputWidthHeight()
+{
+    QDialog dialog(this);
+    QFormLayout form(&dialog);
+    QLabel label("Insert width and height:");
+    form.addRow(&label);
+    QLineEdit w(&dialog);
+    QLineEdit h(&dialog);
+    QIntValidator validator(500,1500,this);
+    w.setValidator(&validator);
+    h.setValidator(&validator);
+    form.addRow(QString("Width:"),&w);
+    form.addRow(QString("Height:"),&h);
+    QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+                               Qt::Horizontal, &dialog);
+    form.addRow(&buttonBox);
+    QObject::connect(&buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
+    QObject::connect(&buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
+    if(dialog.exec() == QDialog::Accepted && !w.text().isEmpty() && !h.text().isEmpty()){
+        width  = w.text().toInt() < 500? 500: w.text().toInt() > 1500? 1500:w.text().toInt();;
+        height = h.text().toInt() < 500? 500: h.text().toInt() > 1500? 1500:h.text().toInt();
+    }else{
+        width = 1350;
+        height = 700;
+    }
+}
+
 void MainWindow::on_pushButton_2_clicked()
 {
     if(allTogether != nullptr)
         delete allTogether;
-    allTogether = new Draw;
-    int numThreads = 10;
+    allTogether = new Draw(height,width);
+    unsigned long numThreads = 10;
     QImage img = layers.last()->getLastPixmap().toImage();
     QList<QImage> layersImages;
     QList<QPixmap> layersPixmap;
-    for(int i = 0;i<layers.size()-1;i++)
+    int layersImagesSize = layers.size() - 1;
+    for(int i = 0;i<layersImagesSize;i++)
         layersImages.append(layers[i]->getLastPixmap().toImage());
-    std::thread threads[numThreads];
-    for (int i = 0; i < numThreads; ++i) {
+    std::vector<std::thread> threads(numThreads);
+    for (unsigned long i = 0; i < numThreads; ++i) {
       threads[i] = std::thread(&MainWindow::mergePixmaps,this, std::ref(img), std::ref(layersImages),
-                               i,allTogether->getWidth(),allTogether->getHeight(),numThreads);
+                               i,allTogether->getWidth(),allTogether->getHeight(),numThreads,layersImagesSize);
     }
-    for (int i = 0; i < numThreads; ++i) {
+    for (unsigned long i = 0; i < numThreads; ++i) {
        threads[i].join();
      }
     allTogether->setPixmap(QPixmap::fromImage(img));
@@ -284,4 +320,22 @@ void MainWindow::on_actionSave_triggered()
 void MainWindow::on_actionRotate_triggered()
 {
     ui->graphicsView->rotate(-90);
+}
+
+void MainWindow::on_actionZoom_in_triggered()
+{
+    ui->graphicsView->scale(1.2,1.2);
+    //currentDraw->zoomIn(); zoom each layer separately
+}
+
+void MainWindow::on_actionZoom_out_triggered()
+{
+    ui->graphicsView->scale(0.8,0.8);
+    //currentDraw->zoomOut(); zoom zoom each layer separately
+}
+
+void MainWindow::on_actionReset_Zoom_triggered()
+{
+    ui->graphicsView->resetMatrix();
+//    currentDraw->resetZoom(); zoom each layer separately
 }

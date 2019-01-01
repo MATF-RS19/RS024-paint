@@ -25,7 +25,8 @@ public:
     ~MainWindow() override;
 
     void resizeEvent(QResizeEvent *event) override;
-
+    int height;
+    int width;
 private slots:
     void on_actionPencil_triggered();
     void on_actionEraser_triggered();
@@ -53,11 +54,17 @@ private slots:
 
     void on_actionRotate_triggered();
 
+    void on_actionZoom_in_triggered();
+
+    void on_actionZoom_out_triggered();
+
+    void on_actionReset_Zoom_triggered();
+
 public slots:
     void rectangle();
     void triangle();
     void circle();
-    void elipse();
+    void ellipse();
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -68,7 +75,6 @@ private:
     Draw *draw;
     Draw *currentDraw;
     Draw *allTogether;
-    QGraphicsProxyWidget *widg;
     int zValue;
     int zMaxPosition;
 
@@ -77,12 +83,12 @@ private:
     void createToolBars();
     void createToolButtons();
     void mergePixmaps(QImage &img, QList<QImage> &layersImages,
-                      const int thread_number, const int xMax, const int yMax, const int numThreads);
-
+                      const int thread_number, const int xMax, const int yMax, const int numThreads, int layersImagesSize);
+    void inputWidthHeight();
     QAction* rectangleAction;
     QAction* triangleAction;
     QAction* circleAction;
-    QAction* elipseAction;
+    QAction* ellipseAction;
 
     QMenu* shapeMenu;
     QToolBar* editToolBar;

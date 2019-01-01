@@ -17,5 +17,6 @@
         <file>images/eraser-icon-14.png</file>
         <file>images/Open-Folder-512.png</file>
         <file>images/rotate_transparent.jpg</file>
+        <file>images/resetZoom.png</file>
     </qresource>
 </RCC>

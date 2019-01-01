@@ -12,8 +12,9 @@ class Draw : public QGraphicsPixmapItem
 {
 public:
     Draw();
+    Draw(int height, int width);
     ~Draw() override;
-    enum Options {None,Pen,Rectangle,Erase,Fill,Circle,Triangle, Elipse};
+    enum Options {None,Pen,Rectangle,Erase,Fill,Circle,Triangle, Ellipse};
 
     void setModified(bool value) { modified = value; }
     bool isModified() const { return modified; }
@@ -49,7 +50,9 @@ public:
     bool saveSameFile();
     void openFile();
     void newSheet();
-
+    void zoomIn();
+    void zoomOut();
+    void resetZoom();
     QPixmap getLastPixmap() const;
 protected:
     void	mouseMoveEvent(QGraphicsSceneMouseEvent * event) override;
@@ -63,20 +66,20 @@ private:
     void fill(const QPointF &current);
     void fillSurface(int x,int y,QRgb targetCol,QRgb fillCol);
     void drawTmp(const QPointF &current, Options shape);
-    void drawTmpRect(const QPointF &current);
-    void drawTmpCircle(const QPointF &current);
-    void drawTmpElipse(const QPointF &current);
-    void drawTmpTriangle(const QPointF &current);
     void drawRect(const QPointF &current);
     void drawCircle(const QPointF &current);
-    void drawElipse(const QPointF &current);
+    void drawEllipse(const QPointF &current);
     void drawTriangle(const QPointF &current);
+
     int mPenWidth;
     int pixCurrent;
     int xMax;
     int yMax;
     int maxUndoStep = 5;
     int undoCurrent;
+
+    double zoomStep = 0.20;
+
     bool modified;
     bool saved;
     bool drawing;

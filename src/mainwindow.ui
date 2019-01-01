@@ -151,6 +151,7 @@ font: 13pt &quot;Ubuntu&quot;;</string>
    <addaction name="actionSave_As"/>
    <addaction name="actionZoom_in"/>
    <addaction name="actionZoom_out"/>
+   <addaction name="actionReset_Zoom"/>
   </widget>
   <widget class="QToolBar" name="toolBar_2">
    <property name="windowTitle">
@@ -341,6 +342,18 @@ font: 13pt &quot;Ubuntu&quot;;</string>
    </property>
    <property name="text">
     <string>Rotate</string>
+   </property>
+  </action>
+  <action name="actionReset_Zoom">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/rec/images/resetZoom.png</normaloff>:/rec/images/resetZoom.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reset Zoom</string>
+   </property>
+   <property name="toolTip">
+    <string>Reset Zoom</string>
    </property>
   </action>
  </widget>

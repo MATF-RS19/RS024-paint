@@ -1,14 +1,13 @@
 #include <QtWidgets>
 #include "draw.h"
-
-Draw::Draw()
+#include "mainwindow.h"
+Draw::Draw(int height,int width)
+    :xMax(width),yMax(height)
 {
     modified = false;
     drawing = false;
     mPenWidth = 1;
     mPenColor = Qt::black;
-    xMax = 1350;
-    yMax = 700;
     pixmapList.push_back(QPixmap(xMax,yMax));
     pixCurrent = 0;
     undoCurrent = 0;
@@ -129,6 +128,23 @@ void Draw::newSheet()
     painter = new QPainter(&pixmapList[pixCurrent]);
 }
 
+void Draw::zoomIn()
+{
+    double factor = scale();
+    setScale(factor+zoomStep);
+}
+
+void Draw::zoomOut()
+{
+    double factor = scale();
+    setScale(factor-zoomStep);
+}
+
+void Draw::resetZoom()
+{
+    setScale(1);
+}
+
 QPixmap Draw::getLastPixmap() const
 {
     return pixmapList[pixCurrent];
@@ -145,15 +161,13 @@ void Draw::mousePressEvent(QGraphicsSceneMouseEvent * event)
             prepareForDraw();
             path = new QPainterPath(QPointF(event->pos().x(),event->pos().y()));
             path->moveTo(event->pos().x(),event->pos().y());
-        }
-         else if(mOption == Erase) {
+        } else if(mOption == Erase) {
             prepareForDraw();
             pathE = new QPainterPath(QPointF(event->pos().x(),event->pos().y()));
             pathE->moveTo(event->pos().x(),event->pos().y());
         } else if(mOption == Fill) {
             fill(event->pos());
-        }
-        else { // Rect, Circle, Triangle
+        } else { // Rect, Circle, Triangle
             startPoint = event->pos();
         }
         drawing = true;
@@ -167,14 +181,13 @@ void Draw::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
             draw(event->pos());
         } else if(mOption == Rectangle) {
             drawTmp(event->pos(), Rectangle);
-        } else if(mOption == Elipse) {
-            drawTmp(event->pos(), Elipse);
+        } else if(mOption == Ellipse) {
+            drawTmp(event->pos(), Ellipse);
         } else if(mOption == Triangle) {
             drawTmp(event->pos(), Triangle);
         } else if(mOption == Erase) {
             erase(event->pos());
-        }
-        else if(mOption == Circle){
+        } else if(mOption == Circle){
             drawTmp(event->pos(), Circle);
         }
     }
@@ -193,9 +206,8 @@ void Draw::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
             drawTriangle(event->pos());
         } else if(mOption == Erase) {
             delete pathE;
-        }
-        else if(mOption == Elipse){
-            drawElipse(event->pos());
+        } else if(mOption == Ellipse){
+            drawEllipse(event->pos());
         }
         drawing = false;
     }
@@ -242,9 +254,9 @@ void Draw::fill(const QPointF &current)
 
     img = QImage(xMax,yMax,QImage::Format_RGB32);
     img = pixmapList[pixCurrent].toImage();
-    colorTarget = img.pixel(current.x(),current.y());
+    colorTarget = img.pixel(static_cast<int>(current.x()),static_cast<int>(current.y()));
     colorFill = mPenColor.rgb();
-    fillSurface(current.x(),current.y(),colorTarget,colorFill);
+    fillSurface(static_cast<int>(current.x()),static_cast<int>(current.y()),colorTarget,colorFill);
 
     pixmapList[pixCurrent].convertFromImage(img);
     painter = new QPainter(&pixmapList[pixCurrent]);
@@ -313,7 +325,7 @@ void Draw::drawTmp(const QPointF &current, Options shape){
     if(shape == Rectangle){
         painter->drawRect(QRectF(startPoint,current));
     }
-    else if(shape == Elipse){
+    else if(shape == Ellipse){
         painter->drawEllipse(QRectF(startPoint,current));
     }
     else if(shape == Triangle){
@@ -354,7 +366,7 @@ void Draw::drawCircle(const QPointF &current)
     setPixmap(pixmapList[pixCurrent]);
 }
 
-void Draw::drawElipse(const QPointF &current){
+void Draw::drawEllipse(const QPointF &current){
     prepareForDraw();
     painter->setPen(QPen(mPenColor, mPenWidth));
     painter->drawEllipse(QRectF(startPoint,current));
