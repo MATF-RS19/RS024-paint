@@ -65,6 +65,7 @@ public slots:
     void triangle();
     void circle();
     void ellipse();
+    void line();
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -89,6 +90,7 @@ private:
     QAction* triangleAction;
     QAction* circleAction;
     QAction* ellipseAction;
+    QAction* lineAction;
 
     QMenu* shapeMenu;
     QToolBar* editToolBar;

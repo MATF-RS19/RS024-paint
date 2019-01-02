@@ -14,7 +14,7 @@ public:
     Draw();
     Draw(int height, int width);
     ~Draw() override;
-    enum Options {None,Pen,Rectangle,Erase,Fill,Circle,Triangle, Ellipse};
+    enum Options {None,Pen,Rectangle,Erase,Fill,Circle,Triangle, Ellipse, Line};
 
     void setModified(bool value) { modified = value; }
     bool isModified() const { return modified; }
@@ -70,6 +70,7 @@ private:
     void drawCircle(const QPointF &current);
     void drawEllipse(const QPointF &current);
     void drawTriangle(const QPointF &current);
+    void drawLine(const QPointF &current);
 
     int mPenWidth;
     int pixCurrent;

@@ -167,7 +167,7 @@ void Draw::mousePressEvent(QGraphicsSceneMouseEvent * event)
             pathE->moveTo(event->pos().x(),event->pos().y());
         } else if(mOption == Fill) {
             fill(event->pos());
-        } else { // Rect, Circle, Triangle
+        } else { // Rect, Circle, Triangle, Ellipse, Line
             startPoint = event->pos();
         }
         drawing = true;
@@ -189,6 +189,8 @@ void Draw::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
             erase(event->pos());
         } else if(mOption == Circle){
             drawTmp(event->pos(), Circle);
+        }else if(mOption == Line){
+            drawTmp(event->pos(), Line);
         }
     }
 }
@@ -208,6 +210,8 @@ void Draw::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
             delete pathE;
         } else if(mOption == Ellipse){
             drawEllipse(event->pos());
+        } else if(mOption == Line){
+            drawLine(event->pos());
         }
         drawing = false;
     }
@@ -341,6 +345,9 @@ void Draw::drawTmp(const QPointF &current, Options shape){
         qreal radius = (current.x()-startPoint.x())/2;
         painter->drawEllipse(center, radius, radius);
     }
+    else if(shape == Line){
+        painter->drawLine(startPoint, current);
+    }
     setPixmap(pixmapList[pixCurrent]);
     delete painter;
     pixmapList.removeLast();
@@ -383,6 +390,14 @@ void Draw::drawTriangle(const QPointF &current)
     QPointF points[3] = {firstPoint, current, thirdPoint};
     painter->setPen(QPen(mPenColor, mPenWidth));
     painter->drawConvexPolygon(points, 3);
+    setPixmap(pixmapList[pixCurrent]);
+}
+
+void Draw::drawLine(const QPointF &current)
+{
+    prepareForDraw();
+    painter->setPen(QPen(mPenColor, mPenWidth));
+    painter->drawLine(startPoint, current);
     setPixmap(pixmapList[pixCurrent]);
 }
 

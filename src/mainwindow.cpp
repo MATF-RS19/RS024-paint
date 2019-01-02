@@ -59,16 +59,19 @@ void MainWindow::createActions(){
     triangleAction = new QAction("Triangle", this);
     circleAction = new QAction("Circle", this);
     ellipseAction = new QAction("Ellipse", this);
+    lineAction = new QAction("Line", this);
     QString imagesDirectory = QDir::currentPath() + "/../src/images";
     rectangleAction->setIcon(QIcon(imagesDirectory + "/rectangle.png"));
     triangleAction->setIcon(QIcon(imagesDirectory + "/triangle.png"));
     circleAction->setIcon(QIcon(imagesDirectory + "/circle.png"));
     ellipseAction->setIcon(QIcon(imagesDirectory + "/ellipse.png"));
+    lineAction->setIcon(QIcon(imagesDirectory + "/line.png"));
 
     QObject::connect(rectangleAction, SIGNAL(triggered()), this, SLOT(rectangle()));
     QObject::connect(triangleAction, SIGNAL(triggered()), this, SLOT(triangle()));
     QObject::connect(circleAction, SIGNAL(triggered()), this, SLOT(circle()));
     QObject::connect(ellipseAction, SIGNAL(triggered()), this, SLOT(ellipse()));
+    QObject::connect(lineAction, SIGNAL(triggered()), this, SLOT(line()));
 }
 
 void MainWindow::createMenus(){
@@ -77,6 +80,7 @@ void MainWindow::createMenus(){
     shapeMenu->addAction(triangleAction);
     shapeMenu->addAction(circleAction);
     shapeMenu->addAction(ellipseAction);
+    shapeMenu->addAction(lineAction);
 }
 
 void MainWindow::createToolButtons(){
@@ -128,6 +132,10 @@ void MainWindow::circle(){
 
 void MainWindow::ellipse(){
     currentDraw->setOption(Draw::Ellipse);
+}
+
+void MainWindow::line(){
+    currentDraw->setOption(Draw::Line);
 }
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
