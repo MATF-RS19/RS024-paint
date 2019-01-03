@@ -27,9 +27,12 @@ public:
     void resizeEvent(QResizeEvent *event) override;
     int height;
     int width;
+
 private slots:
     void on_actionPencil_triggered();
+
     void on_actionEraser_triggered();
+
     void on_horizontalSlider_valueChanged(int value);
 
     void on_pushButton_clicked();
@@ -39,6 +42,7 @@ private slots:
     void on_actionUndo_triggered();
 
     void on_actionRedo_triggered();
+
     void on_actionNew_triggered();
 
     void on_AddLayer_clicked();
@@ -46,6 +50,7 @@ private slots:
     void on_listWidget_itemClicked(QListWidgetItem *item);
 
     void on_pushButton_2_clicked();
+
     void on_actionSave_As_triggered();
 
     void on_actionOpen_triggered();
@@ -60,6 +65,8 @@ private slots:
 
     void on_actionReset_Zoom_triggered();
 
+    void on_DeleteLayer_clicked();
+
 public slots:
     void rectangle();
     void triangle();
@@ -69,23 +76,25 @@ public slots:
 
 protected:
     void closeEvent(QCloseEvent *event) override;
+
 private:
     Ui::MainWindow *ui;
-    bool isSaved();
     QGraphicsScene *scene;
     Draw *draw;
     Draw *currentDraw;
     Draw *allTogether;
     int zValue;
     int zMaxPosition;
+    bool isSaved();
 
     void createActions();
     void createMenus();
     void createToolBars();
     void createToolButtons();
+    void inputWidthHeight();
     void mergePixmaps(QImage &img, QList<QImage> &layersImages,
                       const int thread_number, const int xMax, const int yMax, const int numThreads, int layersImagesSize);
-    void inputWidthHeight();
+
     QAction* rectangleAction;
     QAction* triangleAction;
     QAction* circleAction;

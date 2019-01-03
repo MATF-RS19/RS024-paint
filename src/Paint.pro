@@ -25,10 +25,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        main.cpp \
         mainwindow.cpp \
     draw.cpp \
-    shapebutton.cpp
+    shapebutton.cpp \
+    main.cpp
 
 HEADERS += \
         mainwindow.h \

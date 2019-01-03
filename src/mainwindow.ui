@@ -98,16 +98,23 @@ font: 13pt &quot;Ubuntu&quot;;</string>
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="AddLayer">
         <property name="text">
-         <string>Show All</string>
+         <string>Add Layer</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="AddLayer">
+       <widget class="QPushButton" name="DeleteLayer">
         <property name="text">
-         <string>Add Layer</string>
+         <string>Delete Layer</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>Show All</string>
         </property>
        </widget>
       </item>
@@ -128,6 +135,9 @@ font: 13pt &quot;Ubuntu&quot;;</string>
           <width>444</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::ExtendedSelection</enum>
         </property>
        </widget>
       </item>
@@ -163,7 +173,6 @@ font: 13pt &quot;Ubuntu&quot;;</string>
    <attribute name="toolBarBreak">
     <bool>true</bool>
    </attribute>
-   <addaction name="actionSelect"/>
    <addaction name="actionPencil"/>
    <addaction name="actionFarba"/>
    <addaction name="actionEraser"/>
@@ -233,21 +242,6 @@ font: 13pt &quot;Ubuntu&quot;;</string>
    </property>
    <property name="text">
     <string>Shape</string>
-   </property>
-  </action>
-  <action name="actionSelect">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/rec/images/Cursor-Select-icon.png</normaloff>:/rec/images/Cursor-Select-icon.png</iconset>
-   </property>
-   <property name="text">
-    <string>Select</string>
-   </property>
-   <property name="font">
-    <font/>
    </property>
   </action>
   <action name="actionEraser">
