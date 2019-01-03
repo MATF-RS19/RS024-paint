@@ -82,7 +82,6 @@ private:
     QGraphicsScene *scene;
     Draw *draw;
     Draw *currentDraw;
-    Draw *allTogether;
     int zValue;
     int zMaxPosition;
     bool isSaved();
@@ -94,7 +93,7 @@ private:
     void inputWidthHeight();
     void mergePixmaps(QImage &img, QList<QImage> &layersImages,
                       const int thread_number, const int xMax, const int yMax, const int numThreads, int layersImagesSize);
-
+    void deleteItems(QList<QListWidgetItem*> &items);
     QAction* rectangleAction;
     QAction* triangleAction;
     QAction* circleAction;
@@ -104,7 +103,7 @@ private:
     QMenu* shapeMenu;
     QToolBar* editToolBar;
     ShapeButton* shapeToolButton;
-    QList<Draw*> layers;
+    QMap<int, Draw*> layers;
 };
 
 #endif // MAINWINDOW_H

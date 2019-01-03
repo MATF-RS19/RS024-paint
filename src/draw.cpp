@@ -113,11 +113,16 @@ bool Draw::saveSameFile()
 void Draw::openFile() {
     file = QFileDialog::getOpenFileName(nullptr, "Open image", QString(),
                                         "Images (*.png *.gif *.jpg *.jpeg)");
-    delete painter;
-    pixmapList.removeLast();
-    pixmapList.push_back(QPixmap(file));
-    painter = new QPainter(&pixmapList[pixCurrent]);
-    setPixmap(pixmapList[pixCurrent]);
+    if(file == "") {
+        setPixmap(pixmapList[pixCurrent]);
+    }
+    else {
+        delete painter;
+        pixmapList.removeLast();
+        pixmapList.push_back(QPixmap(file));
+        painter = new QPainter(&pixmapList[pixCurrent]);
+        setPixmap(pixmapList[pixCurrent]);
+    }
 }
 
 void Draw::newSheet()
@@ -148,6 +153,22 @@ void Draw::zoomOut()
 void Draw::resetZoom()
 {
     setScale(1);
+}
+
+void Draw::appendPixmapList(QPixmap pixmap)
+{
+    if(pixCurrent == maxUndoStep) {
+        pixmapList.push_back(pixmap);
+        pixmapList.removeFirst();
+        delete painter;
+        painter = new QPainter(&pixmapList[pixCurrent]);
+    } else {
+        pixmapList.push_back(pixmap);
+        pixCurrent += 1;
+        undoCurrent = pixCurrent;
+        delete painter;
+        painter = new QPainter(&pixmapList[pixCurrent]);
+    }
 }
 
 QPixmap Draw::getLastPixmap() const

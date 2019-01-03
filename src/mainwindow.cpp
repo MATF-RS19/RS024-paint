@@ -15,6 +15,7 @@
 #include <iostream>
 #include <vector>
 #include <thread>
+#include <algorithm>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -25,18 +26,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
-    draw = new Draw(height,width);
+    draw = new Draw(height, width);
     zValue = 0;
     zMaxPosition = 0;
     currentDraw = draw;
-    layers.append(draw);
+    layers[zValue] = draw;
     scene->addItem(draw);
     ui->listWidget->addItem(new QListWidgetItem(QString("Layer %1").arg(zValue), nullptr, zValue));
     setWindowTitle(tr("Paint"));
     resize(height >= 600 ? 600 : height,
            width  >= 700 ? 700 : width);
 
-    allTogether = nullptr;
 
     createActions();
     createMenus();
@@ -48,11 +48,10 @@ MainWindow::~MainWindow()
 {
     delete ui;
 
-    for(int i=0; i<layers.size(); i++){
-        delete layers[i];
+    for(auto key: layers.keys()) {
+        delete layers.value(key);
     }
 
-    delete allTogether;
 }
 
 void MainWindow::createActions(){
@@ -205,19 +204,11 @@ void MainWindow::on_actionNew_triggered()
 
 void MainWindow::on_AddLayer_clicked()
 {
-    if(allTogether != nullptr) {
-        zValue--;
-        scene->removeItem(allTogether);
-        delete allTogether;
-        allTogether = nullptr;
-    }
 
     Draw* newDraw = new Draw(height,width);
-    zValue++;
-    zMaxPosition = zValue;
+    zMaxPosition = ++zValue;
     newDraw->setZValue(zMaxPosition);
-
-    layers.append(newDraw);
+    layers[zValue] = newDraw;
     scene->addItem(newDraw);
     ui->listWidget->addItem(new QListWidgetItem(QString("Layer %1").arg(zValue), nullptr, zValue));
     currentDraw = newDraw;
@@ -225,12 +216,7 @@ void MainWindow::on_AddLayer_clicked()
 
 void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
 {
-    if(allTogether != nullptr){
-        zValue--;
-        scene->removeItem(allTogether);
-        delete allTogether;
-        allTogether = nullptr;
-    }
+
     int index = item->type();
     double tmpZvalue = layers[index]->zValue();
 
@@ -243,7 +229,8 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
 
 void MainWindow::mergePixmaps(QImage &img, QList<QImage> &layersImages,
                               const int thrNum, const int xMax, const int yMax,
-                              const int numThreads, int layersImagesSize){
+                              const int numThreads, int layersImagesSize)
+{
     int numRows = xMax / numThreads;
     int rest = xMax % numThreads;
     int start, end;
@@ -254,15 +241,21 @@ void MainWindow::mergePixmaps(QImage &img, QList<QImage> &layersImages,
         start = numRows * thrNum + rest;
         end = (numRows * (thrNum + 1)) + rest;
      }
-    for (int i = start; i < end; ++i)
-        for(int j = 0; j < yMax; ++j)
-            if(img.pixelColor(i, j) == Qt::white)
-                for(int k = 0; k<layersImagesSize; k++)
-                    if(layersImages[k].pixelColor(i, j) != Qt::white){
+    for (int i = start; i < end; ++i) {
+        for(int j = 0; j < yMax; ++j) {
+            if(img.pixelColor(i, j) == Qt::white) {
+                for(int k = 0; k<layersImagesSize; k++) {
+                    if(layersImages[k].pixelColor(i, j) != Qt::white) {
                         img.setPixelColor(i, j, layersImages[k].pixelColor(i, j));
                         break;
                     }
+                }
+            }
+        }
+    }
 }
+
+
 
 void MainWindow::inputWidthHeight()
 {
@@ -290,34 +283,25 @@ void MainWindow::inputWidthHeight()
         height = 700;
     }
 }
+bool compare(const QListWidgetItem *v1, const QListWidgetItem *v2)
+{
+    return v1->type() < v2->type();
+}
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    if(allTogether != nullptr) {
-        delete allTogether;
+    QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
+    if(items.isEmpty() || items.size() == 1) {
+        return;
     }
-    allTogether = new Draw(height, width);
+    Draw *allTogether = new Draw(height, width);
     unsigned long numThreads = 10;
     QList<QImage> layersImages;
-    int layersImagesSize;
-    int maxItemType = 0;
-    QImage img;
-    QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
-
-    if(!items.isEmpty()) {
-        layersImagesSize = -1;
-        foreach(QListWidgetItem* item, items) {
-            layersImagesSize++;
-            maxItemType = (item->type() > maxItemType) ? item->type() : maxItemType;
-            layersImages.append(layers[item->type()]->getLastPixmap().toImage());
-            img = layers[maxItemType]->getLastPixmap().toImage();
-        }
-    } else {
-        img = layers.last()->getLastPixmap().toImage();
-        layersImagesSize = layers.size() - 1;
-        for(int i=0; i<layersImagesSize; i++){
-            layersImages.append(layers[i]->getLastPixmap().toImage());
-        }
+    std::sort(items.begin(), items.end(), compare);
+    QImage img = layers[items.last()->type()]->getLastPixmap().toImage();
+    int layersImagesSize = items.size() - 1;
+    for(int i = 0;i<layersImagesSize;i++) {
+        layersImages.push_front(layers[items[i]->type()]->getLastPixmap().toImage());
     }
     std::vector<std::thread> threads(numThreads);
     for (unsigned long i = 0; i < numThreads; ++i) {
@@ -327,10 +311,21 @@ void MainWindow::on_pushButton_2_clicked()
     }
     for (unsigned long i = 0; i < numThreads; ++i) {
        threads[i].join();
-     }
+    }
+
+    allTogether->appendPixmapList(QPixmap::fromImage(img));
     allTogether->setPixmap(QPixmap::fromImage(img));
+
+    zMaxPosition = ++zValue;
+    allTogether->setZValue(zMaxPosition);
+
+    layers[zValue] = allTogether;
     scene->addItem(allTogether);
-    allTogether->setZValue(++zValue);
+
+    ui->listWidget->addItem(new QListWidgetItem(QString("Layer %1").arg(zValue), nullptr, zValue));
+    deleteItems(items);
+    currentDraw = allTogether;
+
 }
 
 
@@ -361,13 +356,13 @@ void MainWindow::on_actionRotate_triggered()
 
 void MainWindow::on_actionZoom_in_triggered()
 {
-    ui->graphicsView->scale(1.2,1.2);
+    ui->graphicsView->scale(1.2, 1.2);
     //currentDraw->zoomIn(); zoom in each layer separately
 }
 
 void MainWindow::on_actionZoom_out_triggered()
 {
-    ui->graphicsView->scale(0.8,0.8);
+    ui->graphicsView->scale(0.8, 0.8);
     //currentDraw->zoomOut(); zoom out each layer separately
 }
 
@@ -377,12 +372,26 @@ void MainWindow::on_actionReset_Zoom_triggered()
 //    currentDraw->resetZoom(); reset zoom on each layer separately
 }
 
+void MainWindow::deleteItems(QList<QListWidgetItem *> &items)
+{
+    foreach(QListWidgetItem* item, items) {
+        ui->listWidget->removeItemWidget(item);
+        delete layers[item->type()];
+        layers.remove(item->type());
+        delete item;
+    }
+    if(!layers.isEmpty()) {
+        zMaxPosition = layers.lastKey();
+    }
+    else {
+        zValue = -1;
+        zMaxPosition = -1;
+    }
+}
+
 void MainWindow::on_DeleteLayer_clicked()
 {
     QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
+    deleteItems(items);
 
-    foreach(QListWidgetItem* item, items){
-        ui->listWidget->removeItemWidget(item);
-        delete item;
-    }
 }

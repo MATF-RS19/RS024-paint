@@ -159,6 +159,7 @@ font: 13pt &quot;Ubuntu&quot;;</string>
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
    <addaction name="actionSave_As"/>
+   <addaction name="actionRotate"/>
    <addaction name="actionZoom_in"/>
    <addaction name="actionZoom_out"/>
    <addaction name="actionReset_Zoom"/>
@@ -178,7 +179,6 @@ font: 13pt &quot;Ubuntu&quot;;</string>
    <addaction name="actionEraser"/>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
-   <addaction name="actionRotate"/>
   </widget>
   <action name="actionNew">
    <property name="icon">

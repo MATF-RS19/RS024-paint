@@ -56,7 +56,7 @@ public:
     void zoomIn();
     void zoomOut();
     void resetZoom();
-
+    void appendPixmapList(QPixmap pixmap);
 
 protected:
     void	mouseMoveEvent(QGraphicsSceneMouseEvent * event) override;
