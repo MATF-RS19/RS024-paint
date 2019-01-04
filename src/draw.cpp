@@ -113,10 +113,7 @@ bool Draw::saveSameFile()
 void Draw::openFile() {
     file = QFileDialog::getOpenFileName(nullptr, "Open image", QString(),
                                         "Images (*.png *.gif *.jpg *.jpeg)");
-    if(file == "") {
-        setPixmap(pixmapList[pixCurrent]);
-    }
-    else {
+    if(!file.isEmpty() && !file.isNull()) {
         delete painter;
         pixmapList.removeLast();
         pixmapList.push_back(QPixmap(file));

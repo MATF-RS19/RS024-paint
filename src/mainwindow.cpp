@@ -37,7 +37,6 @@ MainWindow::MainWindow(QWidget *parent) :
     resize(height >= 600 ? 600 : height,
            width  >= 700 ? 700 : width);
 
-
     createActions();
     createMenus();
     createToolButtons();
@@ -106,64 +105,82 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::on_actionPencil_triggered()
 {
-    currentDraw->setOption(Draw::Pen);
+    if(currentDraw != nullptr)
+        currentDraw->setOption(Draw::Pen);
 }
 
 void MainWindow::on_actionEraser_triggered()
 {
-    currentDraw->setOption(Draw::Erase);
+    if(currentDraw != nullptr)
+        currentDraw->setOption(Draw::Erase);
 }
 
 void MainWindow::on_actionFarba_triggered()
 {
-    currentDraw->setOption(Draw::Fill);
+    if(currentDraw != nullptr)
+        currentDraw->setOption(Draw::Fill);
 }
 
-void MainWindow::rectangle(){
-    currentDraw->setOption(Draw::Rectangle);
+void MainWindow::rectangle()
+{
+    if(currentDraw != nullptr)
+        currentDraw->setOption(Draw::Rectangle);
 }
 
 
-void MainWindow::triangle(){
-    currentDraw->setOption(Draw::Triangle);
+void MainWindow::triangle()
+{
+    if(currentDraw != nullptr)
+        currentDraw->setOption(Draw::Triangle);
 }
 
 
-void MainWindow::circle(){
-    currentDraw->setOption(Draw::Circle);
+void MainWindow::circle()
+{
+    if(currentDraw != nullptr)
+        currentDraw->setOption(Draw::Circle);
 }
 
-void MainWindow::ellipse(){
-    currentDraw->setOption(Draw::Ellipse);
+void MainWindow::ellipse()
+{
+    if(currentDraw != nullptr)
+        currentDraw->setOption(Draw::Ellipse);
 }
 
-void MainWindow::line(){
-    currentDraw->setOption(Draw::Line);
+void MainWindow::line()
+{
+    if(currentDraw != nullptr)
+        currentDraw->setOption(Draw::Line);
 }
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
 {
-    currentDraw->setPenWidth(value);
+    if(currentDraw != nullptr)
+        currentDraw->setPenWidth(value);
 }
 
 void MainWindow::on_pushButton_clicked()
 {
-    QColor newColor = QColorDialog::getColor(currentDraw->penColor());
+    if(currentDraw != nullptr){
+        QColor newColor = QColorDialog::getColor(currentDraw->penColor());
 
-    if (newColor.isValid()) {
-        currentDraw->setPenColor(newColor);
+        if (newColor.isValid()) {
+            currentDraw->setPenColor(newColor);
+        }
     }
 }
 
 
 void MainWindow::on_actionUndo_triggered()
 {
-    currentDraw->undo();
+    if(currentDraw != nullptr)
+        currentDraw->undo();
 }
 
 void MainWindow::on_actionRedo_triggered()
 {
-    currentDraw->redo();
+    if(currentDraw != nullptr)
+        currentDraw->redo();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -178,7 +195,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 bool MainWindow::isSaved()
 {
-    if (currentDraw->isModified()) {
+    if (currentDraw !=nullptr && currentDraw->isModified()) {
        QMessageBox::StandardButton ret;
 
        ret = QMessageBox::warning(this, tr("Paint"),
@@ -199,12 +216,15 @@ bool MainWindow::isSaved()
 
 void MainWindow::on_actionNew_triggered()
 {
-    currentDraw->newSheet();
+    if(currentDraw != nullptr)
+        currentDraw->newSheet();
+    else
+       on_AddLayer_clicked();
+
 }
 
 void MainWindow::on_AddLayer_clicked()
 {
-
     Draw* newDraw = new Draw(height,width);
     zMaxPosition = ++zValue;
     newDraw->setZValue(zMaxPosition);
@@ -331,19 +351,20 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_actionSave_As_triggered()
 {
-    if (currentDraw->isModified()) {
+    if (currentDraw != nullptr && currentDraw->isModified()) {
        currentDraw->saveFile();
     }
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
-    currentDraw->openFile();
+    if(currentDraw != nullptr)
+        currentDraw->openFile();
 }
 
 void MainWindow::on_actionSave_triggered()
 {
-    if (currentDraw->isModified()) {
+    if (currentDraw != nullptr && currentDraw->isModified()) {
         currentDraw->setModified(false);
         currentDraw->saveSameFile();
     }
@@ -357,19 +378,25 @@ void MainWindow::on_actionRotate_triggered()
 void MainWindow::on_actionZoom_in_triggered()
 {
     ui->graphicsView->scale(1.2, 1.2);
-    //currentDraw->zoomIn(); zoom in each layer separately
+
+//    if(currentDraw != nullptr)
+//        currentDraw->zoomIn(); zoom in each layer separately
 }
 
 void MainWindow::on_actionZoom_out_triggered()
 {
     ui->graphicsView->scale(0.8, 0.8);
-    //currentDraw->zoomOut(); zoom out each layer separately
+
+//    if(currentDraw != nullptr)
+//        currentDraw->zoomOut(); zoom out each layer separately
 }
 
 void MainWindow::on_actionReset_Zoom_triggered()
 {
     ui->graphicsView->resetMatrix();
-//    currentDraw->resetZoom(); reset zoom on each layer separately
+
+//    if(currentDraw != nullptr)
+//        currentDraw->resetZoom(); reset zoom on each layer separately
 }
 
 void MainWindow::deleteItems(QList<QListWidgetItem *> &items)
@@ -386,6 +413,7 @@ void MainWindow::deleteItems(QList<QListWidgetItem *> &items)
     else {
         zValue = -1;
         zMaxPosition = -1;
+        currentDraw = nullptr;
     }
 }
 
@@ -393,5 +421,4 @@ void MainWindow::on_DeleteLayer_clicked()
 {
     QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
     deleteItems(items);
-
 }
