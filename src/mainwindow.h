@@ -67,6 +67,8 @@ private slots:
 
     void on_DeleteLayer_clicked();
 
+    void sortItems();
+
 public slots:
     void rectangle();
     void triangle();

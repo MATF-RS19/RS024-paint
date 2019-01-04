@@ -232,6 +232,8 @@ void MainWindow::on_AddLayer_clicked()
     scene->addItem(newDraw);
     ui->listWidget->addItem(new QListWidgetItem(QString("Layer %1").arg(zValue), nullptr, zValue));
     currentDraw = newDraw;
+
+    sortItems();
 }
 
 void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
@@ -346,6 +348,8 @@ void MainWindow::on_pushButton_2_clicked()
     deleteItems(items);
     currentDraw = allTogether;
 
+    sortItems();
+
 }
 
 
@@ -415,10 +419,22 @@ void MainWindow::deleteItems(QList<QListWidgetItem *> &items)
         zMaxPosition = -1;
         currentDraw = nullptr;
     }
+
 }
 
 void MainWindow::on_DeleteLayer_clicked()
 {
     QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
     deleteItems(items);
+    sortItems();
+}
+
+void MainWindow::sortItems()
+{
+    QString itemText;
+
+    for(int i = 0; i<ui->listWidget->count(); i++) {
+        itemText = QString("Layer %1").arg(i);
+        ui->listWidget->item(i)->setText(itemText);
+    }
 }
