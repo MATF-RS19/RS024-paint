@@ -4,7 +4,7 @@ This application represents our version of Paint program with option of using la
 
 ## About application:
 
-This is our project for the subject Software development under management of assistant Dr. Ivan Cukic and professor Dr. Sasa Malkov on the University of Belgrade, Facultity of Mathematics.
+This is our project for the subject Software development under management of assistant Dr. Ivan Cukic and professor Dr. Sasa Malkov on the University of Belgrade, Faculty of Mathematics.
 
 ## How to run?
 
@@ -13,14 +13,19 @@ Since we built this application in Qt(Creator), you will need it to run the app.
 2. Build it
 3. Run!
 
+
 ## How to use?
 
 We constructed interface of this app to be as friendly and known as possible.
 
+First step is optional, you can input width and height of the window for your drawing if you want.
+
 In the first toolbar you can make new sheet, open picture, save current picture under current name, save as new picture or overwrite the some other picture, and some operations on the whole scene as rotate and zooming.
 
 In the second toolbar are all basic operations you can do when drawing: using pencil, fill area, erase something, undo/redo commands and shapes menu.
-On the right side of that bar you can see commands for adding, deletion or joining (one or more) of the layers which are right beneath those commands.
+On the right side of that bar you can see commands for addition, deletion or joining (one or more) of the layers which are right beneath those commands.
+
+If you want to show(join) multiple layers, you just have to select them and click on the button 'Show Selected', same applies for deletions of layers.
 
 And the rest depends on your creativity. :)
 
