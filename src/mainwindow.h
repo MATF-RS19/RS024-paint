@@ -35,9 +35,9 @@ private slots:
 
     void on_horizontalSlider_valueChanged(int value);
 
-    void on_pushButton_clicked();
+    void on_Color_clicked();
 
-    void on_actionFarba_triggered();
+    void on_actionBackgroundFill_triggered();
 
     void on_actionUndo_triggered();
 
@@ -49,7 +49,7 @@ private slots:
 
     void on_listWidget_itemClicked(QListWidgetItem *item);
 
-    void on_pushButton_2_clicked();
+    void on_ShowSelected_clicked();
 
     void on_actionSave_As_triggered();
 

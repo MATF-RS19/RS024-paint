@@ -115,7 +115,7 @@ void MainWindow::on_actionEraser_triggered()
         currentDraw->setOption(Draw::Erase);
 }
 
-void MainWindow::on_actionFarba_triggered()
+void MainWindow::on_actionBackgroundFill_triggered()
 {
     if(currentDraw != nullptr)
         currentDraw->setOption(Draw::Fill);
@@ -159,7 +159,7 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
         currentDraw->setPenWidth(value);
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_Color_clicked()
 {
     if(currentDraw != nullptr){
         QColor newColor = QColorDialog::getColor(currentDraw->penColor());
@@ -227,7 +227,7 @@ void MainWindow::on_AddLayer_clicked()
 {
     Draw* newDraw = new Draw(height,width);
     zMaxPosition = ++zValue;
-    newDraw->setZValue(zMaxPosition);
+    newDraw->setZValue(zValue);
     layers[zValue] = newDraw;
     scene->addItem(newDraw);
     ui->listWidget->addItem(new QListWidgetItem(QString("Layer %1").arg(zValue), nullptr, zValue));
@@ -253,15 +253,15 @@ void MainWindow::mergePixmaps(QImage &img, QList<QImage> &layersImages,
                               const int thrNum, const int xMax, const int yMax,
                               const int numThreads, int layersImagesSize)
 {
-    int numRows = xMax / numThreads;
+    int numColumns = xMax / numThreads;
     int rest = xMax % numThreads;
     int start, end;
     if (thrNum == 0) {
-        start = numRows * thrNum;
-        end = (numRows * (thrNum + 1)) + rest;
+        start = numColumns * thrNum;
+        end = (numColumns * (thrNum + 1)) + rest;
      } else {
-        start = numRows * thrNum + rest;
-        end = (numRows * (thrNum + 1)) + rest;
+        start = numColumns * thrNum + rest;
+        end = (numColumns * (thrNum + 1)) + rest;
      }
     for (int i = start; i < end; ++i) {
         for(int j = 0; j < yMax; ++j) {
@@ -310,7 +310,7 @@ bool compare(const QListWidgetItem *v1, const QListWidgetItem *v2)
     return v1->type() < v2->type();
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_ShowSelected_clicked()
 {
     QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
     if(items.isEmpty() || items.size() == 1) {
@@ -339,7 +339,7 @@ void MainWindow::on_pushButton_2_clicked()
     allTogether->setPixmap(QPixmap::fromImage(img));
 
     zMaxPosition = ++zValue;
-    allTogether->setZValue(zMaxPosition);
+    allTogether->setZValue(zValue);
 
     layers[zValue] = allTogether;
     scene->addItem(allTogether);

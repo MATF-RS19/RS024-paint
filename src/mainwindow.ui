@@ -72,7 +72,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="Color">
           <property name="styleSheet">
            <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 0, 0, 255), stop:0.166 rgba(255, 255, 0, 255), stop:0.333 rgba(0, 255, 0, 255), stop:0.5 rgba(0, 255, 255, 255), stop:0.666 rgba(0, 0, 255, 255), stop:0.833 rgba(255, 0, 255, 255), stop:1 rgba(255, 0, 0, 255));
 font: 13pt &quot;Ubuntu&quot;;</string>
@@ -112,9 +112,9 @@ font: 13pt &quot;Ubuntu&quot;;</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="ShowSelected">
         <property name="text">
-         <string>Show All</string>
+         <string>Show Selected</string>
         </property>
        </widget>
       </item>
@@ -175,7 +175,7 @@ font: 13pt &quot;Ubuntu&quot;;</string>
     <bool>true</bool>
    </attribute>
    <addaction name="actionPencil"/>
-   <addaction name="actionFarba"/>
+   <addaction name="actionBackgroundFill"/>
    <addaction name="actionEraser"/>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
@@ -305,7 +305,7 @@ font: 13pt &quot;Ubuntu&quot;;</string>
     </font>
    </property>
   </action>
-  <action name="actionFarba">
+  <action name="actionBackgroundFill">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/rec/images/Fill.png</normaloff>:/rec/images/Fill.png</iconset>

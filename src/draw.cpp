@@ -56,14 +56,14 @@ void Draw::prepareForDraw()
     if(pixCurrent == maxUndoStep) {
         pixmapList.push_back(QPixmap(xMax, yMax));
         pixmapList.removeFirst();
-        pixmapList[pixCurrent] =(pixmapList[pixCurrent-1]);
+        pixmapList[pixCurrent] = pixmapList[pixCurrent-1];
         delete painter;
         painter = new QPainter(&pixmapList[pixCurrent]);
     } else {
         pixmapList.push_back(QPixmap(xMax, yMax));
         pixCurrent += 1;
         undoCurrent = pixCurrent;
-        pixmapList[pixCurrent] = (pixmapList[pixCurrent-1]);
+        pixmapList[pixCurrent] = pixmapList[pixCurrent-1];
         delete painter;
         painter = new QPainter(&pixmapList[pixCurrent]);
     }
@@ -124,7 +124,6 @@ void Draw::openFile() {
 
 void Draw::newSheet()
 {
-    painter->end();
     delete painter;
     pixmapList.clear();
     pixmapList.push_back(QPixmap(xMax, yMax));
@@ -266,19 +265,18 @@ void Draw::erase(const QPointF &movePoint)
 
 void Draw::fill(const QPointF &current)
 {
-    painter->end();
     delete painter;
     QRgb colorTarget, colorFill;
 
     if(pixCurrent == maxUndoStep) {
         pixmapList.push_back(QPixmap(xMax, yMax));
         pixmapList.removeFirst();
-        pixmapList[pixCurrent] =(pixmapList[pixCurrent-1]);
+        pixmapList[pixCurrent] = pixmapList[pixCurrent-1];
     } else {
         pixmapList.push_back(QPixmap(xMax, yMax));
         pixCurrent += 1;
         undoCurrent = pixCurrent;
-        pixmapList[pixCurrent] =(pixmapList[pixCurrent-1]);
+        pixmapList[pixCurrent] = pixmapList[pixCurrent-1];
     }
 
 
